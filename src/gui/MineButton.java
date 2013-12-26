@@ -33,6 +33,12 @@ public class MineButton extends JButton implements MouseListener {
 		setMargin(new Insets(0, 0, 0, 0));
 	}
 
+	public void reset() {
+		setEnabled(true);
+		isFlagged = false;
+		setText("");
+	}
+	
 	public void click(boolean manual) {
 		String[] options = { "Börja om", "Avsluta" };
 		if (isEnabled() && !isFlagged) {

@@ -22,19 +22,14 @@ public class MineField {
 		frame = new JFrame();
 		frame.setTitle("F1 Röj");
 		container = new JPanel();
+		init();
 		newGame();
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 	}
-
-	public void newGame() {
-		progress = height * width - nbrOfMines;
-
-		frame.remove(container);
-		frame.revalidate();
-		isStarted = false;
-
+	
+	private void init() {
 		container = new JPanel();
 		GridLayout grid = new GridLayout(height, width);
 		container.setLayout(grid);
@@ -46,6 +41,17 @@ public class MineField {
 		}
 		frame.add(container);
 		frame.pack();
+	}
+
+	public void newGame() {
+		progress = height * width - nbrOfMines;
+		isStarted = false;
+		container = new JPanel();
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width; j++) {
+				matrix[j][i].reset();
+			}
+		}
 	}
 
 	public void exit() {
