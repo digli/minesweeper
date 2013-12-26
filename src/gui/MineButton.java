@@ -1,6 +1,8 @@
 package gui;
 
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -20,6 +22,8 @@ public class MineButton extends JButton implements MouseListener {
 		this.mf = mf;
 		this.x = x;
 		this.y = y;
+		setForeground(Color.RED);
+		setFont(new Font("Consolas", Font.BOLD, 24));
 		lastClicked = 0;
 		isFlagged = false;
 		addMouseListener(this);
