@@ -80,25 +80,38 @@ public class MineField {
 	}
 
 	public void checkAdjacent(int x, int y) {
-		int flags = 0;
+		boolean lost = false;
+		int tempX = -1, tempY = -1, flags = 0;
 		for (int i = -1; i < 2; i++) {
 			for (int j = -1; j < 2; j++) {
 				try {
-					if (matrix[x + i][y + j].isFlagged)
+					if (matrix[x + i][y + j].isFlagged) {
 						flags++;
+					} else {
+						if (mines[x + i][y + j] == -1) {
+							lost = true;
+							tempX = x + i;
+							tempY = y + j;
+						}
+					}
 				} catch (ArrayIndexOutOfBoundsException e) {
 					// do nothing
 				}
 			}
 		}
-		if (flags == mines[x][y])
-			clickAdjacent(x, y);
+		if (flags == mines[x][y]) {
+			if (lost) {
+				matrix[tempX][tempY].click(true);
+			} else {
+				clickAdjacent(x, y);
+			}
+		}
 	}
 
 	private void createMine(int x, int y) {
-		
+
 		int tempX, tempY;
-		
+
 		do {
 			tempX = (int) Math.floor((Math.random() * width));
 			tempY = (int) Math.floor((Math.random() * height));
