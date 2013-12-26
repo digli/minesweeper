@@ -29,7 +29,7 @@ public class MineField {
 	}
 
 	public void newGame() {
-		progress = height * width - 99;
+		progress = height * width - nbrOfMines;
 
 		frame.remove(container);
 		frame.revalidate();
@@ -83,8 +83,12 @@ public class MineField {
 		int flags = 0;
 		for (int i = -1; i < 2; i++) {
 			for (int j = -1; j < 2; j++) {
-				if (matrix[x + i][y + j].isFlagged)
-					flags++;
+				try {
+					if (matrix[x + i][y + j].isFlagged)
+						flags++;
+				} catch (ArrayIndexOutOfBoundsException e) {
+					// do nothing
+				}
 			}
 		}
 		if (flags == mines[x][y])
@@ -92,8 +96,9 @@ public class MineField {
 	}
 
 	private void createMine(int x, int y) {
-		int tempX, tempY = -10;
-
+		
+		int tempX, tempY;
+		
 		do {
 			tempX = (int) Math.floor((Math.random() * width));
 			tempY = (int) Math.floor((Math.random() * height));
