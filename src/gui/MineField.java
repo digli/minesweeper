@@ -60,7 +60,7 @@ public class MineField {
 		for (int i = -1; i < 2; i++) {
 			for (int j = -1; j < 2; j++) {
 				try {
-					matrix[x + i][y + j].click(1, false);
+					matrix[x + i][y + j].click(false);
 				} catch (ArrayIndexOutOfBoundsException e) {
 					// do nothing
 				}

@@ -29,9 +29,9 @@ public class MineButton extends JButton implements MouseListener {
 		setMargin(new Insets(0, 0, 0, 0));
 	}
 
-	public void click(int button, boolean manual) {
+	public void click(boolean manual) {
 		String[] options = { "Börja om", "Avsluta" };
-		if (button == MouseEvent.BUTTON1 && isEnabled() && !isFlagged) {
+		if (isEnabled() && !isFlagged) {
 			setEnabled(false);
 			switch (mf.mines[x][y]) {
 			case -1:
@@ -53,20 +53,13 @@ public class MineButton extends JButton implements MouseListener {
 				setText(mf.mines[x][y] + "");
 				break;
 			}
-		} else if (button == MouseEvent.BUTTON3 && isEnabled()) {
-			if (isFlagged) {
-				setText("");
-			} else {
-				setText("!");
-			}
-			isFlagged = !isFlagged;
 		}
 		if (mf.progress == 0) {
 			JOptionPane.showOptionDialog(this, "Grattis, du vann på " + mf.getTime() + " sekunder!", "Röj", JOptionPane.DEFAULT_OPTION,
-					JOptionPane.PLAIN_MESSAGE, null, options, null);
+					JOptionPane.PLAIN_MESSAGE, null, options, 0);
 		}
 		if (!isEnabled() && manual) {
-			if (System.currentTimeMillis() - lastClicked < 200) {
+			if (System.currentTimeMillis() - lastClicked < 300) {
 				mf.checkAdjacent(x, y);
 			}
 			lastClicked = System.currentTimeMillis();
@@ -74,16 +67,26 @@ public class MineButton extends JButton implements MouseListener {
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {
-		if (!mf.isStarted) {
-			mf.isStarted = true;
-			mf.generate(x, y);
-		}
-		click(e.getButton(), true);
-	}
-
-	@Override
 	public void mousePressed(MouseEvent e) {
+		if (e.getButton() == MouseEvent.BUTTON1) {
+			if (!mf.isStarted) {
+				mf.isStarted = true;
+				mf.generate(x, y);
+			}
+			click(true);
+		}
+		if (e.getButton() == MouseEvent.BUTTON3 && isEnabled()) {
+			if (isFlagged) {
+				setText("");
+			} else {
+				setText("!");
+			}
+			isFlagged = !isFlagged;
+		}
+	}
+	
+	@Override
+	public void mouseClicked(MouseEvent e) {
 	}
 
 	@Override
