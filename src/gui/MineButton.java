@@ -58,12 +58,12 @@ public class MineButton extends JButton implements MouseListener {
 				setText(mf.mines[x][y] + "");
 				break;
 			}
-			if (mf.progress == 0 && manual) mf.end(MineField.WIN);
 		}
 		if (!isEnabled() && manual) {
 			if (System.currentTimeMillis() - lastClicked < 300) mf.checkAdjacent(x, y);
 			lastClicked = System.currentTimeMillis();
 		}
+		if (mf.progress == 0 && manual) mf.end(MineField.WIN);
 	}
 
 	@Override
