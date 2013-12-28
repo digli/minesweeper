@@ -17,19 +17,20 @@ public class MineButton extends JButton implements MouseListener {
 	private long lastClicked;
 	private int x, y;
 	private MineField mf;
+	private MineCounter mc;
 
-	public MineButton(MineField mf, int x, int y) {
+	public MineButton(MineField mf, MineCounter mc, int x, int y) {
 		this.mf = mf;
+		this.mc = mc;
 		this.x = x;
 		this.y = y;
-		setFont(new Font("Consolas", Font.BOLD, 24));
+		setFont(new Font("Consolas", Font.BOLD, 34));
 		lastClicked = 0;
 		isFlagged = false;
 		addMouseListener(this);
 		setPreferredSize(new Dimension(35, 35));
-		setSize(35, 35);
 		setFocusable(false);
-		setMargin(new Insets(0, 0, 0, 0));
+		setMargin(new Insets(5, 0, 0, 0));
 	}
 
 	public void reset() {
@@ -74,8 +75,13 @@ public class MineButton extends JButton implements MouseListener {
 		}
 		if (e.getButton() == MouseEvent.BUTTON3) {
 			if (isEnabled()) {
-				if (isFlagged) setText("");
-				else setText("!");
+				if (isFlagged) {
+					mc.update(1);
+					setText("");
+				} else {
+					mc.update(-1);
+					setText("!");
+				}
 				isFlagged = !isFlagged;
 			} else click(true);
 		}

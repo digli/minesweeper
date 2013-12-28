@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
 
@@ -13,23 +14,35 @@ public class MineField {
 	public int[][] mines;
 	public int progress;
 
-	private final int height = 20, width = 39, nbrOfMines = 120;
+	private final int height = 16, width = 30, nbrOfMines = 99;
 	private String[] options = { "Börja om", "Avsluta" };
 	private boolean isStarted = false;
 	private MineButton[][] matrix;
 	private JPanel container;
+	private MineCounter mc;
 	private long startTime;
 	private JFrame frame;
+	private JPanel footer;
 
 	public MineField() {
 		frame = new JFrame();
 		frame.setTitle("F1 Röj");
 		container = new JPanel();
 		matrix = new MineButton[width][height];
-
+		mc = new MineCounter(nbrOfMines);
+		footer = new JPanel();
+		
+//		footer.setLayout(new GridLayout(1, 5));
+		
+		footer.add(new ConfigButton());
+		footer.add(mc);
+		
 		init();
 		newGame();
-
+		
+		frame.add(container, BorderLayout.CENTER);
+		frame.add(footer, BorderLayout.SOUTH);
+		frame.pack();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 	}
@@ -38,18 +51,16 @@ public class MineField {
 		container.setLayout(new GridLayout(height, width));
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width; j++) {
-				matrix[j][i] = new MineButton(this, j, i);
+				matrix[j][i] = new MineButton(this, mc, j, i);
 				container.add(matrix[j][i]);
 			}
 		}
-		frame.add(container);
-		frame.pack();
 	}
 
 	public void newGame() {
 		progress = height * width - nbrOfMines;
 		isStarted = false;
-		container = new JPanel();
+		mc.reset();
 		for (int i = 0; i < height; i++)
 			for (int j = 0; j < width; j++)
 				matrix[j][i].reset();
@@ -81,7 +92,7 @@ public class MineField {
 			for (int j = 0; j < width; j++) {
 				if (mines[j][i] == -1) {
 					if (!matrix[j][i].isFlagged) {
-						matrix[j][i].setForeground(new Color(200, 200, 200));
+						matrix[j][i].setForeground(new Color(160, 160, 160));
 						matrix[j][i].setText("¤");
 					}
 				} else if (matrix[j][i].isFlagged) {
