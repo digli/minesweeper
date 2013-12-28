@@ -13,7 +13,7 @@ public class MineField {
 	public int[][] mines;
 	public int progress;
 
-	private final int height = 16, width = 26, nbrOfMines = 99;
+	private final int height = 16, width = 30, nbrOfMines = 99;
 	private String[] options = { "Börja om", "Avsluta" };
 	private boolean isStarted = false;
 	private MineButton[][] matrix;
@@ -50,11 +50,9 @@ public class MineField {
 		progress = height * width - nbrOfMines;
 		isStarted = false;
 		container = new JPanel();
-		for (int i = 0; i < height; i++) {
-			for (int j = 0; j < width; j++) {
+		for (int i = 0; i < height; i++)
+			for (int j = 0; j < width; j++)
 				matrix[j][i].reset();
-			}
-		}
 	}
 
 	public int getTime() {
@@ -67,17 +65,17 @@ public class MineField {
 		case MineField.LOSS:
 			checkMines();
 			choice = JOptionPane.showOptionDialog(frame, "noob", "Röj", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null,
-					options, null);
+					options, 0);
 			break;
 		case MineField.WIN:
 			choice = JOptionPane.showOptionDialog(frame, "Du röjde rubbet på " + getTime() + " sekunder!", "Röj",
-					JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
+					JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, 0);
 			break;
 		}
 		if (choice == 0) newGame();
 		else frame.dispose();
 	}
-	
+
 	private void checkMines() {
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width; j++) {
@@ -133,7 +131,7 @@ public class MineField {
 	public void generate(int x, int y) {
 		if (isStarted) return;
 		mines = new int[width][height];
-		
+
 		for (int i = 0; i < nbrOfMines; i++)
 			createMine(x, y);
 
