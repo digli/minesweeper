@@ -22,7 +22,6 @@ public class MineButton extends JButton implements MouseListener {
 		this.mf = mf;
 		this.x = x;
 		this.y = y;
-		setForeground(Color.RED);
 		setFont(new Font("Consolas", Font.BOLD, 24));
 		lastClicked = 0;
 		isFlagged = false;
@@ -37,6 +36,7 @@ public class MineButton extends JButton implements MouseListener {
 		setEnabled(true);
 		isFlagged = false;
 		setText("");
+		setForeground(null);
 		setBackground(null);
 	}
 

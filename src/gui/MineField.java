@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.Color;
 import java.awt.GridLayout;
 
 import javax.swing.JFrame;
@@ -64,23 +65,39 @@ public class MineField {
 		int choice = 0;
 		switch (ending) {
 		case MineField.LOSS:
+			checkMines();
 			choice = JOptionPane.showOptionDialog(frame, "noob", "Röj", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null,
-					options, 0);
+					options, null);
 			break;
 		case MineField.WIN:
 			choice = JOptionPane.showOptionDialog(frame, "Du röjde rubbet på " + getTime() + " sekunder!", "Röj",
-					JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, 0);
+					JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
 			break;
 		}
 		if (choice == 0) newGame();
 		else frame.dispose();
+	}
+	
+	private void checkMines() {
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width; j++) {
+				if (mines[j][i] == -1) {
+					if (!matrix[j][i].isFlagged) {
+						matrix[j][i].setForeground(new Color(200, 200, 200));
+						matrix[j][i].setText("¤");
+					}
+				} else if (matrix[j][i].isFlagged) {
+					matrix[j][i].setForeground(Color.RED);
+				}
+			}
+		}
 	}
 
 	public void clickAdjacent(int x, int y) {
 		for (int i = -1; i < 2; i++) {
 			for (int j = -1; j < 2; j++) {
 				try {
-					matrix[x + i][y + j].click(false);
+					matrix[x + j][y + i].click(false);
 				} catch (ArrayIndexOutOfBoundsException e) {
 					// do nothing
 				}
@@ -94,12 +111,12 @@ public class MineField {
 		for (int i = -1; i < 2; i++) {
 			for (int j = -1; j < 2; j++) {
 				try {
-					if (matrix[x + i][y + j].isFlagged) flags++;
+					if (matrix[x + j][y + i].isFlagged) flags++;
 					else {
-						if (mines[x + i][y + j] == -1) {
+						if (mines[x + j][y + i] == -1) {
 							lost = true;
-							tempX = x + i;
-							tempY = y + j;
+							tempX = x + j;
+							tempY = y + i;
 						}
 					}
 				} catch (ArrayIndexOutOfBoundsException e) {
@@ -116,6 +133,7 @@ public class MineField {
 	public void generate(int x, int y) {
 		if (isStarted) return;
 		mines = new int[width][height];
+		
 		for (int i = 0; i < nbrOfMines; i++)
 			createMine(x, y);
 
@@ -137,13 +155,13 @@ public class MineField {
 	}
 
 	private void createAdjacent() {
-		for (int i = 0; i < width; i++) {
-			for (int p = 0; p < height; p++) {
-				if (mines[i][p] == -1) {
-					for (int k = -1; k < 2; k++) {
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				if (mines[x][y] == -1) {
+					for (int i = -1; i < 2; i++) {
 						for (int j = -1; j < 2; j++) {
 							try {
-								if (mines[i + k][p + j] != -1) mines[i + k][p + j]++;
+								if (mines[x + j][y + i] != -1) mines[x + j][y + i]++;
 							} catch (ArrayIndexOutOfBoundsException e) {
 								// do nothing
 							}
