@@ -8,19 +8,21 @@ import javax.swing.JPanel;
 
 public class MineField {
 
-	public boolean isStarted = false;
-	public final int height = 16, width = 26;
-	public final int nbrOfMines = 99;
-	public int test = 0;
 	public static final int LOSS = 0, WIN = 1;
+	public boolean isStarted = false;
 	public int progress;
-	public String[] options = { "Börja om", "Avsluta" };
-	private long startTime;
 	public int[][] mines;
 	public MineButton[][] matrix;
+
+	private final int height = 16, width = 26, nbrOfMines = 99;
+	private String[] options = { "Börja om", "Avsluta" };
+	private long startTime;
 	private JFrame frame;
 	private JPanel container;
 
+	// remove later
+	public int test = 0;
+	
 	public MineField() {
 		matrix = new MineButton[width][height];
 		frame = new JFrame();
@@ -139,9 +141,7 @@ public class MineField {
 	}
 
 	private void createMine(int x, int y) {
-
 		int tempX, tempY;
-
 		do {
 			tempX = (int) Math.floor((Math.random() * width));
 			tempY = (int) Math.floor((Math.random() * height));
