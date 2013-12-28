@@ -11,9 +11,10 @@ import javax.swing.JButton;
 
 public class MineButton extends JButton implements MouseListener {
 
+	public boolean isFlagged;
+
 	private static final long serialVersionUID = 1L;
 	private long lastClicked;
-	public boolean isFlagged;
 	private int x, y;
 	private MineField mf;
 
@@ -69,18 +70,14 @@ public class MineButton extends JButton implements MouseListener {
 	@Override
 	public void mousePressed(MouseEvent e) {
 		if (e.getButton() == MouseEvent.BUTTON1) {
-			if (!mf.isStarted) {
-				mf.isStarted = true;
-				mf.generate(x, y);
-			}
+			mf.generate(x, y);
 			click(true);
 		}
 		if (e.getButton() == MouseEvent.BUTTON3 && isEnabled()) {
-			if (isFlagged) {
+			if (isFlagged)
 				setText("");
-			} else {
+			else
 				setText("!");
-			}
 			isFlagged = !isFlagged;
 		}
 	}

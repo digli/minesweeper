@@ -9,22 +9,23 @@ import javax.swing.JPanel;
 public class MineField {
 
 	public static final int LOSS = 0, WIN = 1;
-	public boolean isStarted = false;
-	public int progress;
 	public int[][] mines;
-	public MineButton[][] matrix;
+	public int progress;
 
-	private final int height = 16, width = 26, nbrOfMines = 99;
+	private final int height = 16, width = 26, nbrOfMines = 0;
 	private String[] options = { "Börja om", "Avsluta" };
+	private boolean isStarted = false;
+	private MineButton[][] matrix;
+	private JPanel container;
 	private long startTime;
 	private JFrame frame;
-	private JPanel container;
 
 	public MineField() {
-		matrix = new MineButton[width][height];
 		frame = new JFrame();
 		frame.setTitle("F1 Röj");
 		container = new JPanel();
+		matrix = new MineButton[width][height];
+		
 		init();
 		newGame();
 
@@ -33,9 +34,7 @@ public class MineField {
 	}
 
 	private void init() {
-		container = new JPanel();
-		GridLayout grid = new GridLayout(height, width);
-		container.setLayout(grid);
+		container.setLayout(new GridLayout(height, width));
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width; j++) {
 				matrix[j][i] = new MineButton(this, j, i);
@@ -57,10 +56,6 @@ public class MineField {
 		}
 	}
 
-	public void exit() {
-		frame.dispose();
-	}
-
 	public int getTime() {
 		return (int) (System.currentTimeMillis() - startTime) / 1000;
 	}
@@ -69,19 +64,18 @@ public class MineField {
 		int choice = 0;
 		switch (ending) {
 		case MineField.LOSS:
-			choice = JOptionPane.showOptionDialog(frame, "Ha, du förlorade! " + getTime() + " sekunder.", "Röj",
+			choice = JOptionPane.showOptionDialog(frame, "noob. " + getTime() + " sekunder.", "Röj",
 					JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, 0);
 			break;
 		case MineField.WIN:
-			choice = JOptionPane.showOptionDialog(frame, "Grattis, du vann på " + getTime() + " sekunder!", "Röj",
+			choice = JOptionPane.showOptionDialog(frame, "Du röjde rubbet på " + getTime() + " sekunder!", "Röj",
 					JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, 0);
-
 			break;
 		}
 		if (choice == 0) {
 			newGame();
 		} else {
-			exit();
+			frame.dispose();
 		}
 	}
 
@@ -98,7 +92,7 @@ public class MineField {
 	}
 
 	public void generate(int x, int y) {
-
+		if (isStarted) return;
 		mines = new int[width][height];
 		for (int i = 0; i < nbrOfMines; i++) {
 			createMine(x, y);
@@ -106,6 +100,7 @@ public class MineField {
 		createAdjacent();
 
 		startTime = System.currentTimeMillis();
+		isStarted = true;
 	}
 
 	public void checkAdjacent(int x, int y) {
