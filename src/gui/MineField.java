@@ -20,9 +20,6 @@ public class MineField {
 	private JFrame frame;
 	private JPanel container;
 
-	// remove later
-	public int test = 0;
-	
 	public MineField() {
 		matrix = new MineButton[width][height];
 		frame = new JFrame();

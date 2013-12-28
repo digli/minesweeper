@@ -40,7 +40,6 @@ public class MineButton extends JButton implements MouseListener {
 
 	public void click(boolean manual) {
 		if (isEnabled() && !isFlagged) {
-			mf.test++;
 			setEnabled(false);
 			switch (mf.mines[x][y]) {
 			case -1:
@@ -50,16 +49,14 @@ public class MineButton extends JButton implements MouseListener {
 			case 0:
 				mf.progress--;
 				mf.clickAdjacent(x, y);
-				if (mf.progress == 0)
-					mf.end(MineField.WIN);
 				break;
 			default:
 				mf.progress--;
 				setText(mf.mines[x][y] + "");
-				if (mf.progress == 0)
-					mf.end(MineField.WIN);
 				break;
 			}
+			if (mf.progress == 0 && manual)
+				mf.end(MineField.WIN);
 		}
 		if (!isEnabled() && manual) {
 			if (System.currentTimeMillis() - lastClicked < 300) {
@@ -77,7 +74,6 @@ public class MineButton extends JButton implements MouseListener {
 				mf.generate(x, y);
 			}
 			click(true);
-			System.out.println(mf.test);
 		}
 		if (e.getButton() == MouseEvent.BUTTON3 && isEnabled()) {
 			if (isFlagged) {
