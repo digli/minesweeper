@@ -3,6 +3,7 @@ package gui;
 import java.awt.GridLayout;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class MineField {
@@ -10,7 +11,10 @@ public class MineField {
 	public boolean isStarted = false;
 	public final int height = 16, width = 26;
 	public final int nbrOfMines = 99;
+	public int test = 0;
+	public static final int LOSS = 0, WIN = 1;
 	public int progress;
+	public String[] options = { "Börja om", "Avsluta" };
 	private long startTime;
 	public int[][] mines;
 	public MineButton[][] matrix;
@@ -28,7 +32,7 @@ public class MineField {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 	}
-	
+
 	private void init() {
 		container = new JPanel();
 		GridLayout grid = new GridLayout(height, width);
@@ -60,6 +64,26 @@ public class MineField {
 
 	public int getTime() {
 		return (int) (System.currentTimeMillis() - startTime) / 1000;
+	}
+
+	public void end(int ending) {
+		int choice = 0;
+		switch (ending) {
+		case MineField.LOSS:
+			choice = JOptionPane.showOptionDialog(frame, "Ha, du förlorade! " + getTime() + " sekunder.", "Röj",
+					JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, 0);
+			break;
+		case MineField.WIN:
+			choice = JOptionPane.showOptionDialog(frame, "Grattis, du vann på " + getTime() + " sekunder!", "Röj",
+					JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, 0);
+
+			break;
+		}
+		if (choice == 0) {
+			newGame();
+		} else {
+			exit();
+		}
 	}
 
 	public void clickAdjacent(int x, int y) {
@@ -107,7 +131,7 @@ public class MineField {
 		}
 		if (flags == mines[x][y]) {
 			if (lost) {
-				matrix[tempX][tempY].click(true);
+				matrix[tempX][tempY].click(false);
 			} else {
 				clickAdjacent(x, y);
 			}

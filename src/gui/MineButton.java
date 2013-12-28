@@ -8,7 +8,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
-import javax.swing.JOptionPane;
 
 public class MineButton extends JButton implements MouseListener {
 
@@ -38,35 +37,29 @@ public class MineButton extends JButton implements MouseListener {
 		isFlagged = false;
 		setText("");
 	}
-	
+
 	public void click(boolean manual) {
-		String[] options = { "Börja om", "Avsluta" };
 		if (isEnabled() && !isFlagged) {
+			mf.test++;
 			setEnabled(false);
 			switch (mf.mines[x][y]) {
 			case -1:
 				setText("¤");
-				int choice = JOptionPane.showOptionDialog(this, "Ha, du förlorade!", "Röj", JOptionPane.DEFAULT_OPTION,
-						JOptionPane.PLAIN_MESSAGE, null, options, 0);
-				if (choice == 0) {
-					mf.newGame();
-				} else {
-					mf.exit();
-				}
+				mf.end(MineField.LOSS);
 				break;
 			case 0:
 				mf.progress--;
 				mf.clickAdjacent(x, y);
+				if (mf.progress == 0)
+					mf.end(MineField.WIN);
 				break;
 			default:
 				mf.progress--;
 				setText(mf.mines[x][y] + "");
+				if (mf.progress == 0)
+					mf.end(MineField.WIN);
 				break;
 			}
-		}
-		if (mf.progress == 0) {
-			JOptionPane.showOptionDialog(this, "Grattis, du vann på " + mf.getTime() + " sekunder!", "Röj", JOptionPane.DEFAULT_OPTION,
-					JOptionPane.PLAIN_MESSAGE, null, options, 0);
 		}
 		if (!isEnabled() && manual) {
 			if (System.currentTimeMillis() - lastClicked < 300) {
@@ -84,6 +77,7 @@ public class MineButton extends JButton implements MouseListener {
 				mf.generate(x, y);
 			}
 			click(true);
+			System.out.println(mf.test);
 		}
 		if (e.getButton() == MouseEvent.BUTTON3 && isEnabled()) {
 			if (isFlagged) {
@@ -94,7 +88,7 @@ public class MineButton extends JButton implements MouseListener {
 			isFlagged = !isFlagged;
 		}
 	}
-	
+
 	@Override
 	public void mouseClicked(MouseEvent e) {
 	}
