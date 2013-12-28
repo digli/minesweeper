@@ -37,6 +37,7 @@ public class MineButton extends JButton implements MouseListener {
 		setEnabled(true);
 		isFlagged = false;
 		setText("");
+		setBackground(null);
 	}
 
 	public void click(boolean manual) {
@@ -45,6 +46,7 @@ public class MineButton extends JButton implements MouseListener {
 			switch (mf.mines[x][y]) {
 			case -1:
 				setText("¤");
+				setBackground(Color.RED);
 				mf.end(MineField.LOSS);
 				break;
 			case 0:
@@ -56,13 +58,10 @@ public class MineButton extends JButton implements MouseListener {
 				setText(mf.mines[x][y] + "");
 				break;
 			}
-			if (mf.progress == 0 && manual)
-				mf.end(MineField.WIN);
+			if (mf.progress == 0 && manual) mf.end(MineField.WIN);
 		}
 		if (!isEnabled() && manual) {
-			if (System.currentTimeMillis() - lastClicked < 300) {
-				mf.checkAdjacent(x, y);
-			}
+			if (System.currentTimeMillis() - lastClicked < 300) mf.checkAdjacent(x, y);
 			lastClicked = System.currentTimeMillis();
 		}
 	}
@@ -73,12 +72,12 @@ public class MineButton extends JButton implements MouseListener {
 			mf.generate(x, y);
 			click(true);
 		}
-		if (e.getButton() == MouseEvent.BUTTON3 && isEnabled()) {
-			if (isFlagged)
-				setText("");
-			else
-				setText("!");
-			isFlagged = !isFlagged;
+		if (e.getButton() == MouseEvent.BUTTON3) {
+			if (isEnabled()) {
+				if (isFlagged) setText("");
+				else setText("!");
+				isFlagged = !isFlagged;
+			} else click(true);
 		}
 	}
 

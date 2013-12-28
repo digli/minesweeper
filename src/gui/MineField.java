@@ -12,7 +12,7 @@ public class MineField {
 	public int[][] mines;
 	public int progress;
 
-	private final int height = 16, width = 26, nbrOfMines = 0;
+	private final int height = 16, width = 26, nbrOfMines = 99;
 	private String[] options = { "Börja om", "Avsluta" };
 	private boolean isStarted = false;
 	private MineButton[][] matrix;
@@ -25,7 +25,7 @@ public class MineField {
 		frame.setTitle("F1 Röj");
 		container = new JPanel();
 		matrix = new MineButton[width][height];
-		
+
 		init();
 		newGame();
 
@@ -64,19 +64,16 @@ public class MineField {
 		int choice = 0;
 		switch (ending) {
 		case MineField.LOSS:
-			choice = JOptionPane.showOptionDialog(frame, "noob. " + getTime() + " sekunder.", "Röj",
-					JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, 0);
+			choice = JOptionPane.showOptionDialog(frame, "noob", "Röj", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null,
+					options, 0);
 			break;
 		case MineField.WIN:
 			choice = JOptionPane.showOptionDialog(frame, "Du röjde rubbet på " + getTime() + " sekunder!", "Röj",
 					JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, 0);
 			break;
 		}
-		if (choice == 0) {
-			newGame();
-		} else {
-			frame.dispose();
-		}
+		if (choice == 0) newGame();
+		else frame.dispose();
 	}
 
 	public void clickAdjacent(int x, int y) {
@@ -91,27 +88,14 @@ public class MineField {
 		}
 	}
 
-	public void generate(int x, int y) {
-		if (isStarted) return;
-		mines = new int[width][height];
-		for (int i = 0; i < nbrOfMines; i++) {
-			createMine(x, y);
-		}
-		createAdjacent();
-
-		startTime = System.currentTimeMillis();
-		isStarted = true;
-	}
-
 	public void checkAdjacent(int x, int y) {
 		boolean lost = false;
 		int tempX = -1, tempY = -1, flags = 0;
 		for (int i = -1; i < 2; i++) {
 			for (int j = -1; j < 2; j++) {
 				try {
-					if (matrix[x + i][y + j].isFlagged) {
-						flags++;
-					} else {
+					if (matrix[x + i][y + j].isFlagged) flags++;
+					else {
 						if (mines[x + i][y + j] == -1) {
 							lost = true;
 							tempX = x + i;
@@ -124,12 +108,21 @@ public class MineField {
 			}
 		}
 		if (flags == mines[x][y]) {
-			if (lost) {
-				matrix[tempX][tempY].click(false);
-			} else {
-				clickAdjacent(x, y);
-			}
+			if (lost) matrix[tempX][tempY].click(false);
+			else clickAdjacent(x, y);
 		}
+	}
+
+	public void generate(int x, int y) {
+		if (isStarted) return;
+		mines = new int[width][height];
+		for (int i = 0; i < nbrOfMines; i++)
+			createMine(x, y);
+
+		createAdjacent();
+
+		startTime = System.currentTimeMillis();
+		isStarted = true;
 	}
 
 	private void createMine(int x, int y) {
@@ -137,7 +130,7 @@ public class MineField {
 		do {
 			tempX = (int) Math.floor((Math.random() * width));
 			tempY = (int) Math.floor((Math.random() * height));
-		} while ((tempX == x || tempX == x - 1 || tempX == x + 1) && (tempY == y - 1 || tempY == y || tempY == y + 1)
+		} while ((tempX == x - 1 || tempX == x || tempX == x + 1) && (tempY == y - 1 || tempY == y || tempY == y + 1)
 				|| mines[tempX][tempY] == -1);
 
 		mines[tempX][tempY] = -1;
@@ -150,8 +143,7 @@ public class MineField {
 					for (int k = -1; k < 2; k++) {
 						for (int j = -1; j < 2; j++) {
 							try {
-								if (mines[i + k][p + j] != -1)
-									mines[i + k][p + j]++;
+								if (mines[i + k][p + j] != -1) mines[i + k][p + j]++;
 							} catch (ArrayIndexOutOfBoundsException e) {
 								// do nothing
 							}
