@@ -13,7 +13,7 @@ public class MineField {
 	public int[][] mines;
 	public int progress;
 
-	private final int height = 16, width = 30, nbrOfMines = 99;
+	private final int height = 10, width = 10, nbrOfMines = 10; // fix this!
 	private String[] options = { "Börja om", "Avsluta" };
 	private boolean isStarted = false;
 	private MineButton[][] matrix;
