@@ -39,7 +39,7 @@ public class MineField {
 
 		footer.add(tc);
 		footer.add(new SpaceFiller());
-		footer.add(cb);
+//		footer.add(cb);
 		footer.add(new SpaceFiller());
 		footer.add(mc);
 

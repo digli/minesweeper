@@ -18,6 +18,8 @@ public class MineButton extends JButton implements MouseListener {
 	private MineField mf;
 	private MineCounter mc;
 
+	// private JLabel label;
+
 	public MineButton(MineField mf, MineCounter mc, int x, int y) {
 		this.mf = mf;
 		this.mc = mc;
@@ -34,7 +36,19 @@ public class MineButton extends JButton implements MouseListener {
 		setPreferredSize(new Dimension(35, 35));
 		setFocusable(false);
 		setMargin(new Insets(5, 0, 0, 0));
+
+		// label = new JLabel();
+		// label.setFont(new Font("Consolas", Font.BOLD, 34));
+		// label.setAlignmentX(CENTER_ALIGNMENT);
+		// label.setAlignmentY(CENTER_ALIGNMENT);
+		// label.setAutoscrolls(true);
+		// add(label, BorderLayout.CENTER);
 	}
+
+	// @Override
+	// public void setText(String s) {
+	// label.setText(s);
+	// }
 
 	public void reset() {
 		setEnabled(true);
@@ -96,6 +110,8 @@ public class MineButton extends JButton implements MouseListener {
 		if (leftClick && rightClick) bufferTime = true;
 	}
 
+	//TODO: hitta buggen där man inte kan flagga!
+	
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		if (e.getButton() == MouseEvent.BUTTON1 && leftClick) {
