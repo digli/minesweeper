@@ -14,7 +14,7 @@ public class MineField {
 	public int[][] mines;
 	public int progress;
 
-	private int height = 16, width = 30, nbrOfMines = 99;
+	private int height = 16, width = 30, nbrOfMines = 30;
 	private String[] options = { "Börja om", "Avsluta" };
 	private boolean isStarted = false;
 	private long startTime;
@@ -23,6 +23,7 @@ public class MineField {
 	private MineCounter mc;
 	private TimeCounter tc;
 	private TimeHandler th;
+	private Solver solver;
 	private JPanel container;
 	private JPanel footer;
 	private JFrame frame;
@@ -36,11 +37,14 @@ public class MineField {
 		mc = new MineCounter(nbrOfMines);
 		tc = new TimeCounter();
 		cb = new ConfigButton(this);
+		solver = new Solver(this, matrix);
 
 		footer.add(tc);
-		footer.add(new SpaceFiller());
+		footer.add(new SpaceFiller(100));
 //		footer.add(cb);
-		footer.add(new SpaceFiller());
+//		footer.add(new SpaceFiller(100));
+		footer.add(new SolveButton(solver));
+		footer.add(new SpaceFiller(100));
 		footer.add(mc);
 
 		init();
@@ -57,7 +61,7 @@ public class MineField {
 		container.setLayout(new GridLayout(height, width));
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width; j++) {
-				matrix[j][i] = new MineButton(this, mc, j, i);
+				matrix[j][i] = new MineButton(this, j, i);
 				container.add(matrix[j][i]);
 			}
 		}
@@ -69,6 +73,7 @@ public class MineField {
 		th = new TimeHandler(tc);
 		tc.reset();
 		mc.reset();
+		solver.reset();
 		for (int i = 0; i < height; i++)
 			for (int j = 0; j < width; j++)
 				matrix[j][i].reset();
@@ -82,6 +87,10 @@ public class MineField {
 		return 1 + (int) (System.currentTimeMillis() - startTime) / 1000;
 	}
 
+	public void updateMineCount(int diff) {
+		mc.update(diff);
+	}
+
 	public void resetConfigButton() {
 		cb.reset();
 	}
@@ -92,9 +101,9 @@ public class MineField {
 		switch (ending) {
 		case MineField.LOSS:
 			checkMines();
-			choice = JOptionPane.showOptionDialog(frame, getTime() + " sekunder.", "Röj",
-					JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
-					null, options, 0);
+			choice = JOptionPane.showOptionDialog(frame, getTime()
+					+ " sekunder.", "Röj", JOptionPane.DEFAULT_OPTION,
+					JOptionPane.PLAIN_MESSAGE, null, options, 0);
 			break;
 		case MineField.WIN:
 			choice = JOptionPane.showOptionDialog(frame, "Du röjde rubbet på "

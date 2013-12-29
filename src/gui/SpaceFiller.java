@@ -7,7 +7,7 @@ public class SpaceFiller extends Component {
 
 	private static final long serialVersionUID = 1L;
 
-	public SpaceFiller() {
-		setPreferredSize(new Dimension(180, 44));
+	public SpaceFiller(int width) {
+		setPreferredSize(new Dimension(width, 44));
 	}
 }

@@ -16,13 +16,11 @@ public class MineButton extends JButton implements MouseListener {
 	private long lastClicked;
 	private int x, y;
 	private MineField mf;
-	private MineCounter mc;
 
 	// private JLabel label;
 
-	public MineButton(MineField mf, MineCounter mc, int x, int y) {
+	public MineButton(MineField mf, int x, int y) {
 		this.mf = mf;
-		this.mc = mc;
 		this.x = x;
 		this.y = y;
 		leftClick = false;
@@ -58,6 +56,13 @@ public class MineButton extends JButton implements MouseListener {
 		setBackground(null);
 	}
 
+	// Only used for Solver
+	public void setFlagged() {
+		setText("!");
+		isFlagged = true;
+		mf.updateMineCount(-1);
+	}
+	
 	public boolean isFlagged() {
 		return isFlagged;
 	}
@@ -97,10 +102,10 @@ public class MineButton extends JButton implements MouseListener {
 			if (!isEnabled()) click(true);
 			else if (!leftClick) {
 				if (isFlagged) {
-					mc.update(1);
+					mf.updateMineCount(1);
 					setText("");
 				} else {
-					mc.update(-1);
+					mf.updateMineCount(-1);
 					setText("!");
 				}
 				isFlagged = !isFlagged;
