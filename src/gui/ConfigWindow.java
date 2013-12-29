@@ -10,7 +10,7 @@ import javax.swing.JLabel;
 
 public class ConfigWindow extends JFrame {
 
-	// work in project
+	// work in progress
 	private static final long serialVersionUID = 1L;
 	private MineField mf;
 

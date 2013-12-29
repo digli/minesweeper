@@ -49,6 +49,7 @@ public class MineButton extends JButton implements MouseListener {
 			lastClicked = System.currentTimeMillis();
 		}
 		if (isEnabled() && !isFlagged) {
+			mf.generate(x, y);
 			setEnabled(false);
 			switch (mf.mines[x][y]) {
 			case -1:
@@ -72,7 +73,6 @@ public class MineButton extends JButton implements MouseListener {
 	@Override
 	public void mousePressed(MouseEvent e) {
 		if (e.getButton() == MouseEvent.BUTTON1) {
-			mf.generate(x, y);
 			if (!bufferTime) click(true);
 		}
 		if (e.getButton() == MouseEvent.BUTTON3) {
