@@ -14,7 +14,7 @@ public class MineField {
 	public int[][] mines;
 	public int progress;
 
-	private final int height = 16, width = 30, nbrOfMines = 99;
+	private int height = 16, width = 30, nbrOfMines = 99;
 	private String[] options = { "Börja om", "Avsluta" };
 	private boolean isStarted = false;
 	private MineButton[][] matrix;
@@ -32,9 +32,7 @@ public class MineField {
 		mc = new MineCounter(nbrOfMines);
 		footer = new JPanel();
 		
-//		footer.setLayout(new GridLayout(1, 5));
-		
-		footer.add(new ConfigButton());
+		footer.add(new ConfigButton(this));
 		footer.add(mc);
 		
 		init();
@@ -64,6 +62,10 @@ public class MineField {
 		for (int i = 0; i < height; i++)
 			for (int j = 0; j < width; j++)
 				matrix[j][i].reset();
+	}
+	
+	public void setConfig(int width, int height, int mines) {
+		// TODO
 	}
 
 	public int getTime() {
