@@ -14,25 +14,31 @@ public class MineField {
 	public int[][] mines;
 	public int progress;
 
-	private int height = 16, width = 30, nbrOfMines = 99;
+	private int height = 16, width = 30, nbrOfMines = 9;
 	private String[] options = { "Börja om", "Avsluta" };
 	private boolean isStarted = false;
-	private MineButton[][] matrix;
-	private JPanel container;
-	private MineCounter mc;
 	private long startTime;
-	private JFrame frame;
+	private MineButton[][] matrix;
+	private MineCounter mc;
+	private TimeCounter tc;
+	private TimeHandler th;
+	private JPanel container;
 	private JPanel footer;
+	private JFrame frame;
 
 	public MineField() {
 		frame = new JFrame();
 		frame.setTitle("F1 Röj");
 		container = new JPanel();
+		footer = new JPanel();
 		matrix = new MineButton[width][height];
 		mc = new MineCounter(nbrOfMines);
-		footer = new JPanel();
+		tc = new TimeCounter();
 		
+		footer.add(tc);
+		footer.add(new SpaceFiller());
 		footer.add(new ConfigButton(this));
+		footer.add(new SpaceFiller());
 		footer.add(mc);
 		
 		init();
@@ -58,6 +64,8 @@ public class MineField {
 	public void newGame() {
 		progress = height * width - nbrOfMines;
 		isStarted = false;
+		th = new TimeHandler(tc);
+		tc.reset();
 		mc.reset();
 		for (int i = 0; i < height; i++)
 			for (int j = 0; j < width; j++)
@@ -69,10 +77,11 @@ public class MineField {
 	}
 
 	public int getTime() {
-		return (int) (System.currentTimeMillis() - startTime) / 1000;
+		return 1 + (int) (System.currentTimeMillis() - startTime) / 1000;
 	}
 
 	public void end(int ending) {
+		th.interrupt();
 		int choice = 0;
 		switch (ending) {
 		case MineField.LOSS:
@@ -143,6 +152,8 @@ public class MineField {
 
 	public void generate(int x, int y) {
 		if (isStarted) return;
+		
+		th.start();
 		mines = new int[width][height];
 
 		for (int i = 0; i < nbrOfMines; i++)
