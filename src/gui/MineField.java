@@ -19,6 +19,7 @@ public class MineField {
 	private boolean isStarted = false;
 	private long startTime;
 	private MineButton[][] matrix;
+	private ConfigButton cb;
 	private MineCounter mc;
 	private TimeCounter tc;
 	private TimeHandler th;
@@ -34,10 +35,11 @@ public class MineField {
 		matrix = new MineButton[width][height];
 		mc = new MineCounter(nbrOfMines);
 		tc = new TimeCounter();
+		cb = new ConfigButton(this);
 		
 		footer.add(tc);
 		footer.add(new SpaceFiller());
-		footer.add(new ConfigButton(this));
+		footer.add(cb);
 		footer.add(new SpaceFiller());
 		footer.add(mc);
 		
@@ -80,6 +82,10 @@ public class MineField {
 		return 1 + (int) (System.currentTimeMillis() - startTime) / 1000;
 	}
 
+	public void resetCW() {
+		cb.reset();
+	}
+	
 	public void end(int ending) {
 		th.interrupt();
 		int choice = 0;

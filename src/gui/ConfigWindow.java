@@ -1,49 +1,48 @@
 package gui;
 
-import java.awt.GridLayout;
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 public class ConfigWindow extends JFrame {
-	
+
 	// work in project
 	private static final long serialVersionUID = 1L;
+	private MineField mf;
 
 	public ConfigWindow(MineField mf) {
+		this.mf = mf;
 		
-		JPanel p = new JPanel();
-		p.setLayout(new GridLayout(3, 2));
-		
+		add(new JLabel("ConfigWindow is WIP"), BorderLayout.NORTH);
+		add(new OkButton(this), BorderLayout.SOUTH);
+
 		int width = 0, height = 0, mines = 0;
-
-		p.add(new JLabel("Set height: "));
-		p.add(new JTextField());
-		
-		p.add(new JLabel("Set width: "));
-		p.add(new JTextField());
-		
-		p.add(new JLabel("Set number of mines: "));
-
-//		JLayeredPane pan = new JLayeredPane();
-//		JLabel ontop = new JLabel("asdasd");
-//		JButton bottom = new JButton("click me");
-//		
-//		pan.setLayer(ontop, 2);
-//		pan.setLayer(bottom,  1);
-//		pan.add(ontop);
-//		pan.add(bottom);
-//		
-//		p.add(pan);
-		
 		mf.setConfig(width, height, mines); // TODO
-		
-		add(p);
-		
+
 		pack();
 		setVisible(true);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+	}
+	
+	public class OkButton extends JButton implements ActionListener {
+
+		private static final long serialVersionUID = 1L;
+		private ConfigWindow cw;
+
+		public OkButton(ConfigWindow cw) {
+			super("OK");
+			this.cw = cw;
+			addActionListener(this);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			mf.resetCW();
+			cw.dispose();
+		}
 	}
 }
