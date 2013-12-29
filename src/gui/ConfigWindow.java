@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.GridLayout;
+
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -25,9 +26,19 @@ public class ConfigWindow extends JFrame {
 		p.add(new JTextField());
 		
 		p.add(new JLabel("Set number of mines: "));
-		p.add(new JTextField());
+
+//		JLayeredPane pan = new JLayeredPane();
+//		JLabel ontop = new JLabel("asdasd");
+//		JButton bottom = new JButton("click me");
+//		
+//		pan.setLayer(ontop, 2);
+//		pan.setLayer(bottom,  1);
+//		pan.add(ontop);
+//		pan.add(bottom);
+//		
+//		p.add(pan);
 		
-		mf.setConfig(width, height, mines);
+		mf.setConfig(width, height, mines); // TODO
 		
 		add(p);
 		

@@ -13,10 +13,15 @@ public class ConfigButton extends JButton implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	private MineField mf;
+	private boolean isPressed;
+	
+	
+	
 
 	public ConfigButton(MineField mf) {
 		super("Config");
 		this.mf = mf;
+		isPressed = false;
 		addActionListener(this);
 		setFocusable(false);
 		setPreferredSize(new Dimension(140, 44));
@@ -26,9 +31,16 @@ public class ConfigButton extends JButton implements ActionListener {
 		setBackground(new Color(240, 240, 240));
 	}
 
+	public void reset() {
+		isPressed = false;
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		new ConfigWindow(mf);
+		if (!isPressed) {
+			isPressed = true;
+			new ConfigWindow(mf);
+		}
 	}
 	
 }
