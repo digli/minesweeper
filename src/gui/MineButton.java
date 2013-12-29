@@ -105,7 +105,6 @@ public class MineButton extends JButton implements MouseListener {
 			bufferTime = false;
 		}
 		if (e.getButton() == MouseEvent.BUTTON3 && rightClick) {
-			if (!isEnabled()) click(true);
 			rightClick = false;
 			if (!leftClick) bufferTime = false;
 		}
