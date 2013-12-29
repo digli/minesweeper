@@ -14,7 +14,7 @@ public class MineField {
 	public int[][] mines;
 	public int progress;
 
-	private int height = 16, width = 30, nbrOfMines = 9;
+	private int height = 16, width = 30, nbrOfMines = 99;
 	private String[] options = { "Börja om", "Avsluta" };
 	private boolean isStarted = false;
 	private long startTime;

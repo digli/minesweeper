@@ -18,12 +18,14 @@ public class MineButton extends JButton implements MouseListener {
 	private int x, y;
 	private MineField mf;
 	private MineCounter mc;
+	private boolean bufferTime;
 
 	public MineButton(MineField mf, MineCounter mc, int x, int y) {
 		this.mf = mf;
 		this.mc = mc;
 		this.x = x;
 		this.y = y;
+		bufferTime = false;
 		setFont(new Font("Consolas", Font.BOLD, 34));
 		lastClicked = 0;
 		isFlagged = false;
@@ -42,6 +44,10 @@ public class MineButton extends JButton implements MouseListener {
 	}
 
 	public void click(boolean manual) {
+		if (!isEnabled() && manual) {
+			if (System.currentTimeMillis() - lastClicked < 300) mf.checkAdjacent(x, y);
+			lastClicked = System.currentTimeMillis();
+		}
 		if (isEnabled() && !isFlagged) {
 			setEnabled(false);
 			switch (mf.mines[x][y]) {
@@ -60,10 +66,6 @@ public class MineButton extends JButton implements MouseListener {
 				break;
 			}
 		}
-		if (!isEnabled() && manual) {
-			if (System.currentTimeMillis() - lastClicked < 300) mf.checkAdjacent(x, y);
-			lastClicked = System.currentTimeMillis();
-		}
 		if (mf.progress == 0 && manual) mf.end(MineField.WIN);
 	}
 
@@ -71,28 +73,31 @@ public class MineButton extends JButton implements MouseListener {
 	public void mousePressed(MouseEvent e) {
 		if (e.getButton() == MouseEvent.BUTTON1) {
 			mf.generate(x, y);
-			click(true);
+			if (!bufferTime) click(true);
 		}
 		if (e.getButton() == MouseEvent.BUTTON3) {
-			if (isEnabled()) {
+			if (!isEnabled()) click(true);
+			else {
 				if (isFlagged) {
 					mc.update(1);
 					setText("");
+					bufferTime = true;
 				} else {
 					mc.update(-1);
 					setText("!");
 				}
 				isFlagged = !isFlagged;
-			} else click(true);
+			}
 		}
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {
+	public void mouseReleased(MouseEvent e) {
+		if (e.getButton() == MouseEvent.BUTTON3) bufferTime = false;
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent e) {
+	public void mouseClicked(MouseEvent e) {
 	}
 
 	@Override
