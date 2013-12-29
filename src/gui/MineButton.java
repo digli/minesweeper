@@ -110,13 +110,13 @@ public class MineButton extends JButton implements MouseListener {
 		if (leftClick && rightClick) bufferTime = true;
 	}
 
-	//TODO: hitta buggen där man inte kan flagga!
-	
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		if (e.getButton() == MouseEvent.BUTTON1 && leftClick) {
-			click(true);
-			leftClick = false;
+		if (e.getButton() == MouseEvent.BUTTON1) {
+			if (leftClick) {
+				click(true);
+				leftClick = false;
+			}
 			leftBuffer = false;
 			bufferTime = false;
 		}
