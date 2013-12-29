@@ -50,7 +50,8 @@ public class MineButton extends JButton implements MouseListener {
 
 	public void click(boolean manual) {
 		if (!isEnabled() && manual) {
-			if (System.currentTimeMillis() - lastClicked < 300) mf.checkAdjacent(x, y);
+			if (System.currentTimeMillis() - lastClicked < 300)
+				mf.checkAdjacent(x, y);
 			lastClicked = System.currentTimeMillis();
 		}
 		if (isEnabled() && !isFlagged && !bufferTime) {
@@ -80,7 +81,7 @@ public class MineButton extends JButton implements MouseListener {
 		if (e.getButton() == MouseEvent.BUTTON1) leftClick = true;
 		if (e.getButton() == MouseEvent.BUTTON3) {
 			if (!isEnabled()) click(true);
-			else {
+			else if (!leftClick) {
 				if (isFlagged) {
 					mc.update(1);
 					setText("");

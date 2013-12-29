@@ -82,7 +82,7 @@ public class MineField {
 		return 1 + (int) (System.currentTimeMillis() - startTime) / 1000;
 	}
 
-	public void resetCW() {
+	public void resetConfigButton() {
 		cb.reset();
 	}
 
@@ -92,11 +92,15 @@ public class MineField {
 		switch (ending) {
 		case MineField.LOSS:
 			checkMines();
-			choice = JOptionPane.showOptionDialog(frame, "noob", "Röj", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, 0);
+			choice = JOptionPane.showOptionDialog(frame, getTime() + " sekunder.", "Röj",
+					JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
+					null, options, 0);
 			break;
 		case MineField.WIN:
-			choice = JOptionPane.showOptionDialog(frame, "Du röjde rubbet på " + getTime() + " sekunder!", "Röj", JOptionPane.DEFAULT_OPTION,
-					JOptionPane.PLAIN_MESSAGE, null, options, 0);
+			choice = JOptionPane.showOptionDialog(frame, "Du röjde rubbet på "
+					+ getTime() + " sekunder!", "Röj",
+					JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
+					null, options, 0);
 			break;
 		}
 		if (choice == 0) newGame();
@@ -175,7 +179,9 @@ public class MineField {
 		do {
 			tempX = (int) Math.floor((Math.random() * width));
 			tempY = (int) Math.floor((Math.random() * height));
-		} while ((tempX == x - 1 || tempX == x || tempX == x + 1) && (tempY == y - 1 || tempY == y || tempY == y + 1) || mines[tempX][tempY] == -1);
+		} while ((tempX == x - 1 || tempX == x || tempX == x + 1)
+				&& (tempY == y - 1 || tempY == y || tempY == y + 1)
+				|| mines[tempX][tempY] == -1);
 
 		mines[tempX][tempY] = -1;
 	}
@@ -187,7 +193,8 @@ public class MineField {
 					for (int i = -1; i < 2; i++) {
 						for (int j = -1; j < 2; j++) {
 							try {
-								if (mines[x + j][y + i] != -1) mines[x + j][y + i]++;
+								if (mines[x + j][y + i] != -1)
+									mines[x + j][y + i]++;
 							} catch (ArrayIndexOutOfBoundsException e) {
 								// do nothing
 							}
