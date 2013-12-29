@@ -36,16 +36,16 @@ public class MineField {
 		mc = new MineCounter(nbrOfMines);
 		tc = new TimeCounter();
 		cb = new ConfigButton(this);
-		
+
 		footer.add(tc);
 		footer.add(new SpaceFiller());
 		footer.add(cb);
 		footer.add(new SpaceFiller());
 		footer.add(mc);
-		
+
 		init();
 		newGame();
-		
+
 		frame.add(container, BorderLayout.CENTER);
 		frame.add(footer, BorderLayout.SOUTH);
 		frame.pack();
@@ -73,7 +73,7 @@ public class MineField {
 			for (int j = 0; j < width; j++)
 				matrix[j][i].reset();
 	}
-	
+
 	public void setConfig(int width, int height, int mines) {
 		// TODO
 	}
@@ -85,19 +85,18 @@ public class MineField {
 	public void resetCW() {
 		cb.reset();
 	}
-	
+
 	public void end(int ending) {
 		th.interrupt();
 		int choice = 0;
 		switch (ending) {
 		case MineField.LOSS:
 			checkMines();
-			choice = JOptionPane.showOptionDialog(frame, "noob", "Röj", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null,
-					options, 0);
+			choice = JOptionPane.showOptionDialog(frame, "noob", "Röj", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, 0);
 			break;
 		case MineField.WIN:
-			choice = JOptionPane.showOptionDialog(frame, "Du röjde rubbet på " + getTime() + " sekunder!", "Röj",
-					JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, 0);
+			choice = JOptionPane.showOptionDialog(frame, "Du röjde rubbet på " + getTime() + " sekunder!", "Röj", JOptionPane.DEFAULT_OPTION,
+					JOptionPane.PLAIN_MESSAGE, null, options, 0);
 			break;
 		}
 		if (choice == 0) newGame();
@@ -108,11 +107,11 @@ public class MineField {
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width; j++) {
 				if (mines[j][i] == -1) {
-					if (!matrix[j][i].isFlagged) {
+					if (!matrix[j][i].isFlagged()) {
 						matrix[j][i].setForeground(new Color(160, 160, 160));
 						matrix[j][i].setText("¤");
 					}
-				} else if (matrix[j][i].isFlagged) {
+				} else if (matrix[j][i].isFlagged()) {
 					matrix[j][i].setForeground(Color.RED);
 				}
 			}
@@ -137,7 +136,7 @@ public class MineField {
 		for (int i = -1; i < 2; i++) {
 			for (int j = -1; j < 2; j++) {
 				try {
-					if (matrix[x + j][y + i].isFlagged) flags++;
+					if (matrix[x + j][y + i].isFlagged()) flags++;
 					else {
 						if (mines[x + j][y + i] == -1) {
 							lost = true;
@@ -158,7 +157,7 @@ public class MineField {
 
 	public void generate(int x, int y) {
 		if (isStarted) return;
-		
+
 		th.start();
 		mines = new int[width][height];
 
@@ -176,8 +175,7 @@ public class MineField {
 		do {
 			tempX = (int) Math.floor((Math.random() * width));
 			tempY = (int) Math.floor((Math.random() * height));
-		} while ((tempX == x - 1 || tempX == x || tempX == x + 1) && (tempY == y - 1 || tempY == y || tempY == y + 1)
-				|| mines[tempX][tempY] == -1);
+		} while ((tempX == x - 1 || tempX == x || tempX == x + 1) && (tempY == y - 1 || tempY == y || tempY == y + 1) || mines[tempX][tempY] == -1);
 
 		mines[tempX][tempY] = -1;
 	}

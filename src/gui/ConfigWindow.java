@@ -16,7 +16,7 @@ public class ConfigWindow extends JFrame {
 
 	public ConfigWindow(MineField mf) {
 		this.mf = mf;
-		
+
 		add(new JLabel("ConfigWindow is WIP"), BorderLayout.NORTH);
 		add(new OkButton(this), BorderLayout.SOUTH);
 
@@ -27,7 +27,7 @@ public class ConfigWindow extends JFrame {
 		setVisible(true);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 	}
-	
+
 	public class OkButton extends JButton implements ActionListener {
 
 		private static final long serialVersionUID = 1L;

@@ -9,7 +9,7 @@ public class TimeCounter extends JButton {
 
 	private static final long serialVersionUID = 1L;
 	private int time;
-	
+
 	public TimeCounter() {
 		time = 0;
 		setEnabled(false);
@@ -19,12 +19,12 @@ public class TimeCounter extends JButton {
 		setMargin(new Insets(5, 0, 0, 0));
 		setText(time + "");
 	}
-	
+
 	public void reset() {
 		time = 0;
 		setText(time + "");
 	}
-	
+
 	public void increment() {
 		time++;
 		setText(time + "");

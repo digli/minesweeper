@@ -31,7 +31,7 @@ public class ConfigButton extends JButton implements ActionListener {
 	public void reset() {
 		isPressed = false;
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (!isPressed) {
@@ -39,5 +39,4 @@ public class ConfigButton extends JButton implements ActionListener {
 			new ConfigWindow(mf);
 		}
 	}
-	
 }
