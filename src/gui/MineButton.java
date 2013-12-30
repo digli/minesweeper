@@ -67,13 +67,15 @@ public class MineButton extends JButton implements MouseListener {
 		return isFlagged;
 	}
 
-	public void click(boolean manual) {
+	public boolean click(boolean manual) {
+		boolean change = false;
 		if (!isEnabled() && manual) {
 			if (System.currentTimeMillis() - lastClicked < 300)
 				mf.checkAdjacent(x, y);
 			lastClicked = System.currentTimeMillis();
 		}
 		if (isEnabled() && !isFlagged && !bufferTime) {
+			change = true;
 			mf.generate(x, y);
 			setEnabled(false);
 			switch (mf.mines[x][y]) {
@@ -93,6 +95,7 @@ public class MineButton extends JButton implements MouseListener {
 			}
 		}
 		if (mf.progress == 0 && manual) mf.end(MineField.WIN);
+		return change;
 	}
 
 	@Override

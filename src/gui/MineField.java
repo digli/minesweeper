@@ -10,13 +10,13 @@ import javax.swing.JPanel;
 
 public class MineField {
 
-	public static final int LOSS = 0, WIN = 1;
+	public static final int LOSS = 0, WIN = 1, AUTO = 2;
+	public boolean isStarted = false;
 	public int[][] mines;
 	public int progress;
 
-	private int height = 16, width = 30, nbrOfMines = 30;
+	private int height = 10, width = 10, nbrOfMines = 20;
 	private String[] options = { "Börja om", "Avsluta" };
-	private boolean isStarted = false;
 	private long startTime;
 	private MineButton[][] matrix;
 	private ConfigButton cb;
@@ -39,18 +39,18 @@ public class MineField {
 		cb = new ConfigButton(this);
 		solver = new Solver(this, matrix);
 
-		footer.add(tc);
-		footer.add(new SpaceFiller(100));
+//		footer.add(tc);
+//		footer.add(new SpaceFiller(100));
 //		footer.add(cb);
 //		footer.add(new SpaceFiller(100));
 		footer.add(new SolveButton(solver));
-		footer.add(new SpaceFiller(100));
+//		footer.add(new SpaceFiller(100));
 		footer.add(mc);
 
 		init();
 		newGame();
 
-		frame.add(container, BorderLayout.CENTER);
+		frame.add(container);
 		frame.add(footer, BorderLayout.SOUTH);
 		frame.pack();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -111,6 +111,12 @@ public class MineField {
 					JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
 					null, options, 0);
 			break;
+		case MineField.AUTO:
+			choice = JOptionPane.showOptionDialog(frame,
+					"Minröjaren gjorde ditt jobb.", "Röj",
+					JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
+					null, options, 0);
+			break;
 		}
 		if (choice == 0) newGame();
 		else frame.dispose();
@@ -131,19 +137,21 @@ public class MineField {
 		}
 	}
 
-	public void clickAdjacent(int x, int y) {
+	public boolean clickAdjacent(int x, int y) {
+		boolean change = false;
 		for (int i = -1; i < 2; i++) {
 			for (int j = -1; j < 2; j++) {
 				try {
-					matrix[x + j][y + i].click(false);
+					if (matrix[x + j][y + i].click(false)) change = true;
 				} catch (ArrayIndexOutOfBoundsException e) {
 					// do nothing
 				}
 			}
 		}
+		return change;
 	}
 
-	public void checkAdjacent(int x, int y) {
+	public boolean checkAdjacent(int x, int y) {
 		boolean lost = false;
 		int tempX = -1, tempY = -1, flags = 0;
 		for (int i = -1; i < 2; i++) {
@@ -163,9 +171,12 @@ public class MineField {
 			}
 		}
 		if (flags == mines[x][y]) {
-			if (lost) matrix[tempX][tempY].click(false);
-			else clickAdjacent(x, y);
+			if (lost) {
+				matrix[tempX][tempY].click(false);
+				return true;
+			} else return clickAdjacent(x, y);
 		}
+		return false;
 	}
 
 	public void generate(int x, int y) {
@@ -215,6 +226,15 @@ public class MineField {
 	}
 
 	public static void main(String[] args) {
+
+		// try {
+		// UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		// } catch (UnsupportedLookAndFeelException e) {
+		// } catch (ClassNotFoundException e) {
+		// } catch (InstantiationException e) {
+		// } catch (IllegalAccessException e) {
+		// }
+
 		new MineField();
 	}
 }
