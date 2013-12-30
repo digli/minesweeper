@@ -29,7 +29,6 @@ public class MineButton extends JButton implements MouseListener {
 		bufferTime = false;
 		setFont(new Font("Consolas", Font.BOLD, 34));
 		lastClicked = 0;
-		isFlagged = false;
 		addMouseListener(this);
 		setPreferredSize(new Dimension(35, 35));
 		setFocusable(false);
@@ -58,6 +57,7 @@ public class MineButton extends JButton implements MouseListener {
 
 	// Only used for Solver
 	public void setFlagged() {
+		if (isFlagged) return;
 		setText("!");
 		isFlagged = true;
 		mf.updateMineCount(-1);

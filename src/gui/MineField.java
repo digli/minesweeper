@@ -44,7 +44,7 @@ public class MineField {
 //		footer.add(cb);
 //		footer.add(new SpaceFiller(100));
 		footer.add(new SolveButton(solver));
-//		footer.add(new SpaceFiller(100));
+		footer.add(new SpaceFiller(100));
 		footer.add(mc);
 
 		init();
@@ -93,6 +93,16 @@ public class MineField {
 
 	public void resetConfigButton() {
 		cb.reset();
+	}
+
+	public void end(long time) {
+		th.interrupt();
+		int choice = JOptionPane.showOptionDialog(frame,
+				"Minröjaren gjorde ditt jobb på " + time + " ms.", "Röj",
+				JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null,
+				options, 0);
+		if (choice == 0) newGame();
+		else frame.dispose();
 	}
 
 	public void end(int ending) {

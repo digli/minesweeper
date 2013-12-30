@@ -11,13 +11,12 @@ public class TimeCounter extends JButton {
 	private int time;
 
 	public TimeCounter() {
-		time = 0;
 		setEnabled(false);
 		setFocusable(false);
 		setPreferredSize(new Dimension(100, 44));
 		setFont(new Font("Consolas", Font.BOLD, 30));
 		setMargin(new Insets(5, 0, 0, 0));
-		setText(time + "");
+		setText(0 + "");
 	}
 
 	public void reset() {
@@ -26,7 +25,6 @@ public class TimeCounter extends JButton {
 	}
 
 	public void increment() {
-		time++;
-		setText(time + "");
+		setText(++time + "");
 	}
 }
