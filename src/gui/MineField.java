@@ -39,10 +39,10 @@ public class MineField {
 		cb = new ConfigButton(this);
 		solver = new Solver(this, matrix);
 
-//		footer.add(tc);
-//		footer.add(new SpaceFiller(100));
-//		footer.add(cb);
-//		footer.add(new SpaceFiller(100));
+		// footer.add(tc);
+		// footer.add(new SpaceFiller(100));
+		// footer.add(cb);
+		// footer.add(new SpaceFiller(100));
 		footer.add(new SolveButton(solver));
 		footer.add(new SpaceFiller(100));
 		footer.add(mc);
@@ -118,12 +118,6 @@ public class MineField {
 		case MineField.WIN:
 			choice = JOptionPane.showOptionDialog(frame, "Du röjde rubbet på "
 					+ getTime() + " sekunder!", "Röj",
-					JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
-					null, options, 0);
-			break;
-		case MineField.AUTO:
-			choice = JOptionPane.showOptionDialog(frame,
-					"Minröjaren gjorde ditt jobb.", "Röj",
 					JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
 					null, options, 0);
 			break;
