@@ -1,5 +1,7 @@
 package gui;
 
+import java.util.ArrayList;
+
 public class Solver {
 
 	private MineField mf;
@@ -41,13 +43,19 @@ public class Solver {
 		if (!hasChanged) {
 			// Initiate Tank Algorithm
 
-			// int[][] temp = new int[matrix.length][matrix[0].length];
-			//
-			// for (int y = 0; y < matrix[0].length; y++) {
-			// for (int x = 0; x < matrix.length; x++) {
-			// temp[x][y] = mf.mines[x][y];
-			// }
-			// }
+			// create list of tiles to check
+			ArrayList<MineButton> borderTiles = new ArrayList<MineButton>();
+			for (int y = 0; y < matrix[0].length; y++) {
+				for (int x = 0; x < matrix.length; x++) {
+					if (!matrix[x][y].isEnabled()) {
+						if (countAdjacent(x, y) > mf.mines[x][y]) {
+							addAdjacent(x, y, borderTiles);
+						}
+					}
+				}
+			}
+
+			// check every possible configuration
 
 		}
 
@@ -56,6 +64,21 @@ public class Solver {
 
 	public void reset() {
 		flags = new int[matrix.length][matrix[0].length];
+	}
+
+	private void addAdjacent(int x, int y, ArrayList<MineButton> list) {
+		for (int i = -1; i < 2; i++) {
+			for (int j = -1; j < 2; j++) {
+				try {
+					if (matrix[x + j][y + i].isEnabled()
+							&& !list.contains(matrix[x + j][y + i].isEnabled())) {
+						list.add(matrix[x + j][y + i]);
+					}
+				} catch (ArrayIndexOutOfBoundsException e) {
+					// nop
+				}
+			}
+		}
 	}
 
 	private int countAdjacent(int x, int y) {
