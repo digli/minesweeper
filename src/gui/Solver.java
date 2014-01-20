@@ -62,40 +62,40 @@ public class Solver {
 			}
 
 			// check every possible configuration
-			int[][] tempFlags = new int[matrix.length][matrix[0].length];
-
-			for (MineButton b : borderTiles) {
-				tryFlag(b, tempFlags);
-			}
+			// int[][] tempFlags = new int[matrix.length][matrix[0].length];
+			//
+			// for (MineButton b : borderTiles) {
+			// tryFlag(b, tempFlags);
+			// }
 
 		}
 
 		if (mf.progress == 0) mf.end(System.currentTimeMillis() - start);
 	}
 
-	private void tryFlag(MineButton b, int[][] tempFlags) {
-		int tempX = b.x();
-		int tempY = b.y();
-
-		tempFlags[tempX][tempY]++;
-		b.probability++;
-		if (saturatedAdjacents(tempX, tempY)) {
-
-		}
-	}
-
-	private boolean saturatedAdjacents(int x, int y) {
-		for (int i = -1; i < 2; i++) {
-			for (int j = -1; j < 2; j++) {
-				try {
-					if (!matrix[x + j][y + i].isEnabled()) {
-					}
-				} catch (ArrayIndexOutOfBoundsException e) {
-				}
-			}
-		}
-		return false;
-	}
+	// private void tryFlag(MineButton b, int[][] tempFlags) {
+	// int tempX = b.x();
+	// int tempY = b.y();
+	//
+	// tempFlags[tempX][tempY]++;
+	// b.probability++;
+	// if (saturatedAdjacents(tempX, tempY)) {
+	//
+	// }
+	// }
+	//
+	// private boolean saturatedAdjacents(int x, int y) {
+	// for (int i = -1; i < 2; i++) {
+	// for (int j = -1; j < 2; j++) {
+	// try {
+	// if (!matrix[x + j][y + i].isEnabled()) {
+	// }
+	// } catch (ArrayIndexOutOfBoundsException e) {
+	// }
+	// }
+	// }
+	// return false;
+	// }
 
 	private void addAdjacent(int x, int y, ArrayList<MineButton> list) {
 		for (int i = -1; i < 2; i++) {

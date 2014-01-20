@@ -47,8 +47,9 @@ public class MineButton extends JButton implements MouseListener {
 
 	// Solver only
 	public int x() {
-		 return x;
+		return x;
 	}
+
 	public int y() {
 		return y;
 	}
@@ -61,7 +62,7 @@ public class MineButton extends JButton implements MouseListener {
 	public void reset() {
 		setEnabled(true);
 		isFlagged = false;
-				
+
 		setText("");
 		setForeground(null);
 		setBackground(null);
@@ -70,7 +71,6 @@ public class MineButton extends JButton implements MouseListener {
 		leftClick = false;
 		leftBuffer = false;
 		rightClick = false;
-		bufferTime = false;
 		probability = 0;
 	}
 
