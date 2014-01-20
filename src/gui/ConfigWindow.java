@@ -41,8 +41,8 @@ public class ConfigWindow extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			mf.resetConfigButton();
 			cw.dispose();
+			mf.resetConfigButton();
 		}
 	}
 }

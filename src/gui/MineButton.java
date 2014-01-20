@@ -11,6 +11,9 @@ import javax.swing.JButton;
 
 public class MineButton extends JButton implements MouseListener {
 
+	// Solver only
+	public int probability = 0;
+
 	private static final long serialVersionUID = 1L;
 	private boolean isFlagged, leftClick, leftBuffer, rightClick, bufferTime;
 	private long lastClicked;
@@ -42,6 +45,14 @@ public class MineButton extends JButton implements MouseListener {
 		// add(label, BorderLayout.CENTER);
 	}
 
+	// Solver only
+	public int x() {
+		 return x;
+	}
+	public int y() {
+		return y;
+	}
+
 	// @Override
 	// public void setText(String s) {
 	// label.setText(s);
@@ -50,19 +61,27 @@ public class MineButton extends JButton implements MouseListener {
 	public void reset() {
 		setEnabled(true);
 		isFlagged = false;
+				
 		setText("");
 		setForeground(null);
 		setBackground(null);
+
+		// Solver only
+		leftClick = false;
+		leftBuffer = false;
+		rightClick = false;
+		bufferTime = false;
+		probability = 0;
 	}
 
-	// Only used for Solver
+	// Solver only
 	public void setFlagged() {
 		if (isFlagged) return;
 		setText("!");
 		isFlagged = true;
 		mf.updateMineCount(-1);
 	}
-	
+
 	public boolean isFlagged() {
 		return isFlagged;
 	}

@@ -2,7 +2,9 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -15,11 +17,11 @@ public class MineField {
 	public int[][] mines;
 	public int progress;
 
-	private int height = 10, width = 10, nbrOfMines = 20;
+	private int height = 16, width = 30, nbrOfMines = 99;
 	private String[] options = { "Börja om", "Avsluta" };
 	private long startTime;
 	private MineButton[][] matrix;
-	private ConfigButton cb;
+	// private ConfigButton cb;
 	private MineCounter mc;
 	private TimeCounter tc;
 	private TimeHandler th;
@@ -36,11 +38,11 @@ public class MineField {
 		matrix = new MineButton[width][height];
 		mc = new MineCounter(nbrOfMines);
 		tc = new TimeCounter();
-		cb = new ConfigButton(this);
+		// cb = new ConfigButton(this);
 		solver = new Solver(this, matrix);
 
-		// footer.add(tc);
-		// footer.add(new SpaceFiller(100));
+		footer.add(tc);
+		footer.add(new SpaceFiller(100));
 		// footer.add(cb);
 		// footer.add(new SpaceFiller(100));
 		footer.add(new SolveButton(solver));
@@ -53,7 +55,12 @@ public class MineField {
 		frame.add(container);
 		frame.add(footer, BorderLayout.SOUTH);
 		frame.pack();
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		frame.setLocation(dim.width / 2 - frame.getSize().width / 2, dim.height
+				/ 2 - frame.getSize().height / 2);
+
+		// frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 	}
 
@@ -73,7 +80,10 @@ public class MineField {
 		th = new TimeHandler(tc);
 		tc.reset();
 		mc.reset();
+
+		// Solver only
 		solver.reset();
+
 		for (int i = 0; i < height; i++)
 			for (int j = 0; j < width; j++)
 				matrix[j][i].reset();
@@ -92,7 +102,7 @@ public class MineField {
 	}
 
 	public void resetConfigButton() {
-		cb.reset();
+		// cb.reset();
 	}
 
 	public void end(long time) {
@@ -148,7 +158,6 @@ public class MineField {
 				try {
 					if (matrix[x + j][y + i].click(false)) change = true;
 				} catch (ArrayIndexOutOfBoundsException e) {
-					// do nothing
 				}
 			}
 		}
@@ -170,7 +179,6 @@ public class MineField {
 						}
 					}
 				} catch (ArrayIndexOutOfBoundsException e) {
-					// do nothing
 				}
 			}
 		}
@@ -220,7 +228,6 @@ public class MineField {
 								if (mines[x + j][y + i] != -1)
 									mines[x + j][y + i]++;
 							} catch (ArrayIndexOutOfBoundsException e) {
-								// do nothing
 							}
 						}
 					}

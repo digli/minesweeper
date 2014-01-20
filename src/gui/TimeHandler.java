@@ -13,9 +13,8 @@ public class TimeHandler extends Thread {
 		while (!interrupted()) {
 			tc.increment();
 			t += 1000;
-			long diff = t - System.currentTimeMillis();
 			try {
-				Thread.sleep(diff);
+				Thread.sleep(t - System.currentTimeMillis());
 			} catch (InterruptedException e) {
 				return;
 			}

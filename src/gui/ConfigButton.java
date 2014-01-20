@@ -12,8 +12,8 @@ import javax.swing.JButton;
 public class ConfigButton extends JButton implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
-	private MineField mf;
 	private boolean isPressed;
+	private MineField mf;
 
 	public ConfigButton(MineField mf) {
 		super("Config");
