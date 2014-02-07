@@ -60,8 +60,9 @@ public class MineField {
 		frame.setLocation(dim.width / 2 - frame.getSize().width / 2, dim.height
 				/ 2 - frame.getSize().height / 2);
 
-		// frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
+
 	}
 
 	private void init() {
@@ -76,10 +77,10 @@ public class MineField {
 
 	public void newGame() {
 		progress = height * width - nbrOfMines;
-		isStarted = false;
 		th = new TimeHandler(tc);
 		tc.reset();
 		mc.reset();
+		isStarted = false;
 
 		// Solver only
 		solver.reset();
@@ -209,8 +210,8 @@ public class MineField {
 	private void createMine(int x, int y) {
 		int tempX, tempY;
 		do {
-			tempX = (int) Math.floor((Math.random() * width));
-			tempY = (int) Math.floor((Math.random() * height));
+			tempX = (int) (Math.random() * width);
+			tempY = (int) (Math.random() * height);
 		} while ((tempX == x - 1 || tempX == x || tempX == x + 1)
 				&& (tempY == y - 1 || tempY == y || tempY == y + 1)
 				|| mines[tempX][tempY] == -1);
