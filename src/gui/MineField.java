@@ -20,11 +20,12 @@ public class MineField extends JFrame implements KeyListener {
 	public int[][] mines;
 	public int progress;
 
-	private int height = 16, width = 30, nbrOfMines = 99;
+	private int height = 16, width = 30, nbrOfMines = 60;
 	private String[] options = { "Börja om", "Avsluta" };
 	private long startTime;
 	private MineButton[][] matrix;
 	// private ConfigButton cb;
+	private DiscoThread dc;
 	private MineCounter mc;
 	private TimeCounter tc;
 	private TimeHandler th;
@@ -40,6 +41,7 @@ public class MineField extends JFrame implements KeyListener {
 		mc = new MineCounter(nbrOfMines);
 		tc = new TimeCounter();
 		// cb = new ConfigButton(this);
+		dc = new DiscoThread(matrix, width, height);
 		solver = new Solver(this, matrix);
 
 		footer.add(tc);
@@ -111,10 +113,13 @@ public class MineField extends JFrame implements KeyListener {
 
 	public void end(long time) {
 		th.interrupt();
+		dc.start();
 		int choice = JOptionPane.showOptionDialog(this,
 				"Minröjaren Clara slutförde ditt jobb på " + time + " ms.",
 				"Clara", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
 				null, options, 0);
+		dc.interrupt();
+		dc = new DiscoThread(matrix, width, height);
 		if (choice == 0) newGame();
 		else dispose();
 	}
@@ -130,10 +135,13 @@ public class MineField extends JFrame implements KeyListener {
 					JOptionPane.PLAIN_MESSAGE, null, options, 0);
 			break;
 		case MineField.WIN:
+			dc.start();
 			choice = JOptionPane.showOptionDialog(this, "Du röjde rubbet på "
 					+ getTime() + " sekunder!", "Vinst",
 					JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
 					null, options, 0);
+			dc.interrupt();
+			dc = new DiscoThread(matrix, width, height);
 			break;
 		}
 		if (choice == 0) newGame();
