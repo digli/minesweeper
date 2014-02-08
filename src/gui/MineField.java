@@ -5,13 +5,16 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-public class MineField {
+public class MineField extends JFrame implements KeyListener {
 
+	private static final long serialVersionUID = 1L;
 	public static final int LOSS = 0, WIN = 1, AUTO = 2;
 	public boolean isStarted = false;
 	public int[][] mines;
@@ -28,11 +31,9 @@ public class MineField {
 	private Solver solver;
 	private JPanel container;
 	private JPanel footer;
-	private JFrame frame;
 
 	public MineField() {
-		frame = new JFrame();
-		frame.setTitle("F1 Röj");
+		setTitle("F1 Röj");
 		container = new JPanel();
 		footer = new JPanel();
 		matrix = new MineButton[width][height];
@@ -49,19 +50,21 @@ public class MineField {
 		footer.add(new SpaceFiller(100));
 		footer.add(mc);
 
+		addKeyListener(this);
+
 		init();
 		newGame();
 
-		frame.add(container);
-		frame.add(footer, BorderLayout.SOUTH);
-		frame.pack();
+		add(container);
+		add(footer, BorderLayout.SOUTH);
+		pack();
 
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-		frame.setLocation(dim.width / 2 - frame.getSize().width / 2, dim.height
-				/ 2 - frame.getSize().height / 2);
+		setLocation(dim.width / 2 - getSize().width / 2, dim.height / 2
+				- getSize().height / 2);
 
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setVisible(true);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setVisible(true);
 
 	}
 
@@ -108,12 +111,12 @@ public class MineField {
 
 	public void end(long time) {
 		th.interrupt();
-		int choice = JOptionPane.showOptionDialog(frame,
-				"Minröjaren gjorde ditt jobb på " + time + " ms.", "Röj",
-				JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null,
-				options, 0);
+		int choice = JOptionPane.showOptionDialog(this,
+				"Minröjaren Clara slutförde ditt jobb på " + time + " ms.",
+				"Clara", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
+				null, options, 0);
 		if (choice == 0) newGame();
-		else frame.dispose();
+		else dispose();
 	}
 
 	public void end(int ending) {
@@ -122,19 +125,19 @@ public class MineField {
 		switch (ending) {
 		case MineField.LOSS:
 			checkMines();
-			choice = JOptionPane.showOptionDialog(frame, getTime()
-					+ " sekunder.", "Röj", JOptionPane.DEFAULT_OPTION,
+			choice = JOptionPane.showOptionDialog(this, getTime()
+					+ " sekunder.", "Förlust", JOptionPane.DEFAULT_OPTION,
 					JOptionPane.PLAIN_MESSAGE, null, options, 0);
 			break;
 		case MineField.WIN:
-			choice = JOptionPane.showOptionDialog(frame, "Du röjde rubbet på "
-					+ getTime() + " sekunder!", "Röj",
+			choice = JOptionPane.showOptionDialog(this, "Du röjde rubbet på "
+					+ getTime() + " sekunder!", "Vinst",
 					JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
 					null, options, 0);
 			break;
 		}
 		if (choice == 0) newGame();
-		else frame.dispose();
+		else dispose();
 	}
 
 	private void checkMines() {
@@ -235,6 +238,21 @@ public class MineField {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void keyPressed(KeyEvent arg0) {
+		if (arg0.getKeyCode() == KeyEvent.VK_SPACE) {
+			solver.solve();
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent arg0) {
+	}
+
+	@Override
+	public void keyTyped(KeyEvent arg0) {
 	}
 
 	public static void main(String[] args) {
