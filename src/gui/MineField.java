@@ -3,10 +3,14 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -15,6 +19,7 @@ import javax.swing.JPanel;
 public class MineField extends JFrame implements KeyListener {
 
 	public static final int LOSS = 0, WIN = 1, AUTO = 2;
+	public static Font consolas;
 	public boolean isStarted = false;
 	public int[][] mines;
 	public int progress;
@@ -282,6 +287,16 @@ public class MineField extends JFrame implements KeyListener {
 	}
 
 	public static void main(String[] args) {
+
+		try {
+			consolas = Font.createFont(Font.PLAIN, new File("files/consola.ttf"));
+		} catch (FontFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		// try {
 		// UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
