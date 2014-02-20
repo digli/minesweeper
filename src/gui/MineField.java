@@ -14,17 +14,17 @@ import javax.swing.JPanel;
 
 public class MineField extends JFrame implements KeyListener {
 
-	private static final long serialVersionUID = 1L;
 	public static final int LOSS = 0, WIN = 1, AUTO = 2;
 	public boolean isStarted = false;
 	public int[][] mines;
 	public int progress;
 
-	private int height = 16, width = 30, nbrOfMines = 60;
+	private static final long serialVersionUID = 1L;
+	private int height = 16, width = 30, nbrOfMines = 99;
 	private String[] options = { "Börja om", "Avsluta" };
 	private long startTime;
 	private MineButton[][] matrix;
-	// private ConfigButton cb;
+	private ConfigButton cb;
 	private DiscoThread dc;
 	private MineCounter mc;
 	private TimeCounter tc;
@@ -40,14 +40,14 @@ public class MineField extends JFrame implements KeyListener {
 		matrix = new MineButton[width][height];
 		mc = new MineCounter(nbrOfMines);
 		tc = new TimeCounter();
-		// cb = new ConfigButton(this);
+		cb = new ConfigButton(this);
 		dc = new DiscoThread(matrix, width, height);
 		solver = new Solver(this, matrix);
 
 		footer.add(tc);
 		footer.add(new SpaceFiller(100));
-		// footer.add(cb);
-		// footer.add(new SpaceFiller(100));
+		footer.add(cb);
+		footer.add(new SpaceFiller(100));
 		footer.add(new SolveButton(solver));
 		footer.add(new SpaceFiller(100));
 		footer.add(mc);
@@ -67,7 +67,6 @@ public class MineField extends JFrame implements KeyListener {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
-
 	}
 
 	private void init() {
@@ -97,6 +96,25 @@ public class MineField extends JFrame implements KeyListener {
 
 	public void setConfig(int width, int height, int mines) {
 		// TODO
+		this.width = width;
+		this.height = height;
+		nbrOfMines = mines;
+
+		remove(container);
+
+		container = new JPanel();
+		init();
+		newGame();
+
+		add(container);
+
+		pack();
+
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		setLocation(dim.width / 2 - getSize().width / 2, dim.height / 2
+				- getSize().height / 2);
+
+		// setVisible(true);
 	}
 
 	public int getTime() {

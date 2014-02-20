@@ -85,6 +85,8 @@ public class MineButton extends JButton implements MouseListener {
 
 	// Returns true if button was clicked
 	public boolean click(boolean manual) {
+		// slowest method in history
+		if (getBackground() != null) setBackground(null); 
 		boolean change = false;
 		if (isEnabled() && !isFlagged && !bufferTime) {
 			change = true;
