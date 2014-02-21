@@ -29,12 +29,15 @@ public class ConfigWindow extends JFrame {
 
 		container.add(new JLabel("New width:"));
 		widthInput = new JTextField();
+		widthInput.setText(mf.getGridWidth() + "");
 		container.add(widthInput);
 		container.add(new JLabel("New height:"));
 		heightInput = new JTextField();
+		heightInput.setText(mf.getGridHeight() + "");
 		container.add(heightInput);
 		container.add(new JLabel("Number of mines:"));
 		minesInput = new JTextField();
+		minesInput.setText(mf.getNbrOfMines() + "");
 		container.add(minesInput);
 
 		add(container);
@@ -47,7 +50,12 @@ public class ConfigWindow extends JFrame {
 		setLocation(dim.width / 2 - getSize().width / 2, dim.height / 2
 				- getSize().height / 2);
 		setVisible(true);
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(close());
+	}
+
+	private int close() {
+		mf.resetConfigButton();
+		return DISPOSE_ON_CLOSE;
 	}
 
 	public class OkButton extends JButton implements ActionListener {
@@ -63,21 +71,19 @@ public class ConfigWindow extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-
 			cw.dispose();
-
-			int width = 0, height = 0, mines = 0;
+			int width = mf.getGridWidth(), height = mf.getGridHeight(), mines = mf
+					.getNbrOfMines();
 
 			try {
 				width = Integer.parseInt(widthInput.getText());
 				height = Integer.parseInt(heightInput.getText());
 				mines = Integer.parseInt(minesInput.getText());
 			} catch (NumberFormatException e) {
-				System.out.println("dadas");
+				System.out.println("NumberFormatException");
 			}
 
 			mf.setConfig(width, height, mines);
-
 			mf.resetConfigButton();
 		}
 	}

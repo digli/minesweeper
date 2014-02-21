@@ -118,12 +118,22 @@ public class MineField extends JFrame implements KeyListener {
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		setLocation(dim.width / 2 - getSize().width / 2, dim.height / 2
 				- getSize().height / 2);
-
-		// setVisible(true);
 	}
 
 	public int getTime() {
 		return 1 + (int) (System.currentTimeMillis() - startTime) / 1000;
+	}
+
+	public int getGridWidth() {
+		return width;
+	}
+
+	public int getGridHeight() {
+		return height;
+	}
+
+	public int getNbrOfMines() {
+		return nbrOfMines;
 	}
 
 	public void updateMineCount(int diff) {
@@ -131,7 +141,7 @@ public class MineField extends JFrame implements KeyListener {
 	}
 
 	public void resetConfigButton() {
-		// cb.reset();
+		cb.reset();
 	}
 
 	public void end(long time) {
