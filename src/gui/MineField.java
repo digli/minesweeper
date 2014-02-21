@@ -289,12 +289,11 @@ public class MineField extends JFrame implements KeyListener {
 	public static void main(String[] args) {
 
 		try {
-			consolas = Font.createFont(Font.PLAIN, new File("files/consola.ttf"));
+			consolas = Font.createFont(Font.TRUETYPE_FONT, new File(
+					"files/consolab.ttf"));
 		} catch (FontFormatException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

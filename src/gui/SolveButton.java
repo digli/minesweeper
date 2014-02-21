@@ -20,7 +20,7 @@ public class SolveButton extends JButton implements ActionListener {
 		addActionListener(this);
 		setFocusable(false);
 		setPreferredSize(new Dimension(140, 44));
-		setFont(new Font("Consolas", Font.BOLD, 30));
+		setFont(MineField.consolas.deriveFont(Font.BOLD, 30f));
 		setMargin(new Insets(5, 0, 0, 0));
 		setForeground(new Color(160, 160, 160));
 		setBackground(new Color(240, 240, 240));

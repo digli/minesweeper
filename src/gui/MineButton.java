@@ -30,7 +30,7 @@ public class MineButton extends JButton implements MouseListener {
 		leftBuffer = false;
 		rightClick = false;
 		bufferTime = false;
-		setFont(new Font("Consolas", Font.BOLD, 34));
+		setFont(MineField.consolas.deriveFont(Font.BOLD, 34f));
 		lastClicked = 0;
 		addMouseListener(this);
 		setPreferredSize(new Dimension(35, 35));
@@ -86,7 +86,7 @@ public class MineButton extends JButton implements MouseListener {
 	// Returns true if button was clicked
 	public boolean click(boolean manual) {
 		// slowest method in history
-		if (getBackground() != null) setBackground(null); 
+		if (getBackground() != null) setBackground(null);
 		boolean change = false;
 		if (isEnabled() && !isFlagged && !bufferTime) {
 			change = true;
