@@ -1,7 +1,6 @@
 package gui;
 
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Insets;
 
 import javax.swing.JButton;
@@ -17,7 +16,7 @@ public class MineCounter extends JButton {
 		setEnabled(false);
 		setFocusable(false);
 		setPreferredSize(new Dimension(100, 44));
-		setFont(MineField.consolas.deriveFont(Font.BOLD, 30f));
+		setFont(MineField.consolas.deriveFont(30f));
 		setMargin(new Insets(5, 0, 0, 0));
 		setText(nbrOfMines + "");
 	}
