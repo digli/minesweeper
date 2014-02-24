@@ -2,7 +2,6 @@ package gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -30,7 +29,7 @@ public class MineButton extends JButton implements MouseListener {
 		leftBuffer = false;
 		rightClick = false;
 		bufferTime = false;
-		setFont(new Font("Consolas", Font.BOLD, 34));
+		setFont(MineField.consolas.deriveFont(34f));
 		lastClicked = 0;
 		addMouseListener(this);
 		setPreferredSize(new Dimension(35, 35));
@@ -68,9 +67,6 @@ public class MineButton extends JButton implements MouseListener {
 		setBackground(null);
 
 		// Solver only
-		leftClick = false;
-		leftBuffer = false;
-		rightClick = false;
 		probability = 0;
 	}
 
@@ -86,13 +82,11 @@ public class MineButton extends JButton implements MouseListener {
 		return isFlagged;
 	}
 
+	// Returns true if button was clicked
 	public boolean click(boolean manual) {
+		// slowest method in history
+		if (getBackground() != null) setBackground(null);
 		boolean change = false;
-		if (!isEnabled() && manual) {
-			if (System.currentTimeMillis() - lastClicked < 300)
-				mf.checkAdjacent(x, y);
-			lastClicked = System.currentTimeMillis();
-		}
 		if (isEnabled() && !isFlagged && !bufferTime) {
 			change = true;
 			mf.generate(x, y);
@@ -112,6 +106,10 @@ public class MineButton extends JButton implements MouseListener {
 				setText(mf.mines[x][y] + "");
 				break;
 			}
+		} else if (!isEnabled() && manual) {
+			if (System.currentTimeMillis() - lastClicked < 300)
+				mf.checkAdjacent(x, y);
+			lastClicked = System.currentTimeMillis();
 		}
 		if (mf.progress == 0 && manual) mf.end(MineField.WIN);
 		return change;
@@ -119,22 +117,24 @@ public class MineButton extends JButton implements MouseListener {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		if (e.getButton() == MouseEvent.BUTTON1) leftClick = true;
-		if (e.getButton() == MouseEvent.BUTTON3) {
-			if (!isEnabled()) click(true);
-			else if (!leftClick) {
-				if (isFlagged) {
-					mf.updateMineCount(1);
-					setText("");
-				} else {
-					mf.updateMineCount(-1);
-					setText("!");
+		if (!isEnabled()) click(true);
+		else {
+			if (e.getButton() == MouseEvent.BUTTON1) leftClick = true;
+			if (e.getButton() == MouseEvent.BUTTON3) {
+				if (!leftClick) {
+					if (isFlagged) {
+						mf.updateMineCount(1);
+						setText("");
+					} else {
+						mf.updateMineCount(-1);
+						setText("!");
+					}
+					isFlagged = !isFlagged;
 				}
-				isFlagged = !isFlagged;
+				rightClick = true;
 			}
-			rightClick = true;
+			if (leftClick && rightClick) bufferTime = true;
 		}
-		if (leftClick && rightClick) bufferTime = true;
 	}
 
 	@Override

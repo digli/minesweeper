@@ -47,8 +47,6 @@ public class Solver {
 		if (!hasChanged) {
 			// Initiate Tank Algorithm
 
-			// TODO : separate lists by adjacency
-
 			// create list of tiles to check
 			ArrayList<MineButton> borderTiles = new ArrayList<MineButton>();
 			for (int y = 0; y < matrix[0].length; y++) {
@@ -61,6 +59,18 @@ public class Solver {
 				}
 			}
 
+			// TODO : separate lists by adjacency
+//			for (MineButton b : borderTiles) {
+//				b.setBackground(Color.BLUE); // it just werks!
+//			}
+
+//			Stack<MineButton> stack = new Stack<MineButton>();
+			
+			System.out.println(borderTiles.size());
+			
+			  
+			
+			
 			// check every possible configuration
 			// int[][] tempFlags = new int[matrix.length][matrix[0].length];
 			//

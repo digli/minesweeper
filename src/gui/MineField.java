@@ -3,65 +3,73 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.io.File;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-public class MineField {
+public class MineField extends JFrame implements KeyListener {
 
 	public static final int LOSS = 0, WIN = 1, AUTO = 2;
+	public static Font consolas;
 	public boolean isStarted = false;
 	public int[][] mines;
 	public int progress;
 
+	private static final long serialVersionUID = 1L;
 	private int height = 16, width = 30, nbrOfMines = 99;
 	private String[] options = { "Börja om", "Avsluta" };
 	private long startTime;
 	private MineButton[][] matrix;
-	// private ConfigButton cb;
+	private ConfigButton cb;
+	private DiscoThread dt;
 	private MineCounter mc;
 	private TimeCounter tc;
 	private TimeHandler th;
 	private Solver solver;
 	private JPanel container;
 	private JPanel footer;
-	private JFrame frame;
 
 	public MineField() {
-		frame = new JFrame();
-		frame.setTitle("F1 Röj");
+		setTitle("F1 Röj");
 		container = new JPanel();
 		footer = new JPanel();
 		matrix = new MineButton[width][height];
 		mc = new MineCounter(nbrOfMines);
 		tc = new TimeCounter();
-		// cb = new ConfigButton(this);
+		cb = new ConfigButton(this);
+		dt = new DiscoThread(matrix, width, height);
 		solver = new Solver(this, matrix);
 
 		footer.add(tc);
 		footer.add(new SpaceFiller(100));
-		// footer.add(cb);
-		// footer.add(new SpaceFiller(100));
+		footer.add(cb);
+		footer.add(new SpaceFiller(100));
 		footer.add(new SolveButton(solver));
 		footer.add(new SpaceFiller(100));
 		footer.add(mc);
 
+		addKeyListener(this);
+
 		init();
 		newGame();
 
-		frame.add(container);
-		frame.add(footer, BorderLayout.SOUTH);
-		frame.pack();
+		add(container);
+		add(footer, BorderLayout.SOUTH);
+		pack();
 
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-		frame.setLocation(dim.width / 2 - frame.getSize().width / 2, dim.height
-				/ 2 - frame.getSize().height / 2);
+		setLocation(dim.width / 2 - getSize().width / 2, dim.height / 2
+				- getSize().height / 2);
 
-		// frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setVisible(true);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setVisible(true);
 	}
 
 	private void init() {
@@ -76,10 +84,10 @@ public class MineField {
 
 	public void newGame() {
 		progress = height * width - nbrOfMines;
-		isStarted = false;
 		th = new TimeHandler(tc);
 		tc.reset();
 		mc.reset();
+		isStarted = false;
 
 		// Solver only
 		solver.reset();
@@ -90,11 +98,41 @@ public class MineField {
 	}
 
 	public void setConfig(int width, int height, int mines) {
-		// TODO
+		// TODO: fix arrayoutofbounds when altering width/height
+		// TODO: fix resizing of spacefillers when lowering width
+		this.width = width;
+		this.height = height;
+		nbrOfMines = mines;
+
+		remove(container);
+
+		container = new JPanel();
+		init();
+		newGame();
+
+		add(container);
+
+		pack();
+
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		setLocation(dim.width / 2 - getSize().width / 2, dim.height / 2
+				- getSize().height / 2);
 	}
 
 	public int getTime() {
 		return 1 + (int) (System.currentTimeMillis() - startTime) / 1000;
+	}
+
+	public int getGridWidth() {
+		return width;
+	}
+
+	public int getGridHeight() {
+		return height;
+	}
+
+	public int getNbrOfMines() {
+		return nbrOfMines;
 	}
 
 	public void updateMineCount(int diff) {
@@ -102,17 +140,20 @@ public class MineField {
 	}
 
 	public void resetConfigButton() {
-		// cb.reset();
+		cb.reset();
 	}
 
 	public void end(long time) {
 		th.interrupt();
-		int choice = JOptionPane.showOptionDialog(frame,
-				"Minröjaren gjorde ditt jobb på " + time + " ms.", "Röj",
-				JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null,
-				options, 0);
+		dt.start();
+		int choice = JOptionPane.showOptionDialog(this,
+				"Minröjaren Clara slutförde ditt jobb på " + time + " ms.",
+				"Clara", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
+				null, options, 0);
+		dt.interrupt();
+		dt = new DiscoThread(matrix, width, height);
 		if (choice == 0) newGame();
-		else frame.dispose();
+		else dispose();
 	}
 
 	public void end(int ending) {
@@ -121,19 +162,22 @@ public class MineField {
 		switch (ending) {
 		case MineField.LOSS:
 			checkMines();
-			choice = JOptionPane.showOptionDialog(frame, getTime()
-					+ " sekunder.", "Röj", JOptionPane.DEFAULT_OPTION,
+			choice = JOptionPane.showOptionDialog(this, getTime()
+					+ " sekunder.", "Förlust", JOptionPane.DEFAULT_OPTION,
 					JOptionPane.PLAIN_MESSAGE, null, options, 0);
 			break;
 		case MineField.WIN:
-			choice = JOptionPane.showOptionDialog(frame, "Du röjde rubbet på "
-					+ getTime() + " sekunder!", "Röj",
+			dt.start();
+			choice = JOptionPane.showOptionDialog(this, "Du röjde rubbet på "
+					+ getTime() + " sekunder!", "Disko",
 					JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
 					null, options, 0);
+			dt.interrupt();
+			dt = new DiscoThread(matrix, width, height);
 			break;
 		}
 		if (choice == 0) newGame();
-		else frame.dispose();
+		else dispose();
 	}
 
 	private void checkMines() {
@@ -209,8 +253,8 @@ public class MineField {
 	private void createMine(int x, int y) {
 		int tempX, tempY;
 		do {
-			tempX = (int) Math.floor((Math.random() * width));
-			tempY = (int) Math.floor((Math.random() * height));
+			tempX = (int) (Math.random() * width);
+			tempY = (int) (Math.random() * height);
 		} while ((tempX == x - 1 || tempX == x || tempX == x + 1)
 				&& (tempY == y - 1 || tempY == y || tempY == y + 1)
 				|| mines[tempX][tempY] == -1);
@@ -236,7 +280,29 @@ public class MineField {
 		}
 	}
 
+	@Override
+	public void keyPressed(KeyEvent arg0) {
+		if (arg0.getKeyCode() == KeyEvent.VK_SPACE) {
+			solver.solve();
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent arg0) {
+	}
+
+	@Override
+	public void keyTyped(KeyEvent arg0) {
+	}
+
 	public static void main(String[] args) {
+
+		try {
+			consolas = Font.createFont(Font.TRUETYPE_FONT, new File(
+					"files/consolab.ttf"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		// try {
 		// UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
