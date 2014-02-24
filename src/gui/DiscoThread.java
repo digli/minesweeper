@@ -8,7 +8,7 @@ public class DiscoThread extends Thread {
 	private MineButton[][] matrix;
 	private int width, height, tiles;
 	private Color[] colors = { Color.MAGENTA, Color.ORANGE, Color.CYAN,
-			Color.YELLOW, Color.BLUE, Color.GREEN, Color.RED };
+			Color.YELLOW, Color.BLUE, Color.GREEN, Color.RED, new Color(128, 0, 128) };
 
 	public DiscoThread(MineButton[][] matrix, int width, int height) {
 		this.matrix = matrix;

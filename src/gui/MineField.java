@@ -4,13 +4,11 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.FontFormatException;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
-import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -30,7 +28,7 @@ public class MineField extends JFrame implements KeyListener {
 	private long startTime;
 	private MineButton[][] matrix;
 	private ConfigButton cb;
-	private DiscoThread dc;
+	private DiscoThread dt;
 	private MineCounter mc;
 	private TimeCounter tc;
 	private TimeHandler th;
@@ -46,7 +44,7 @@ public class MineField extends JFrame implements KeyListener {
 		mc = new MineCounter(nbrOfMines);
 		tc = new TimeCounter();
 		cb = new ConfigButton(this);
-		dc = new DiscoThread(matrix, width, height);
+		dt = new DiscoThread(matrix, width, height);
 		solver = new Solver(this, matrix);
 
 		footer.add(tc);
@@ -100,7 +98,8 @@ public class MineField extends JFrame implements KeyListener {
 	}
 
 	public void setConfig(int width, int height, int mines) {
-		// TODO
+		// TODO: fix arrayoutofbounds when altering width/height
+		// TODO: fix resizing of spacefillers when lowering width
 		this.width = width;
 		this.height = height;
 		nbrOfMines = mines;
@@ -146,13 +145,13 @@ public class MineField extends JFrame implements KeyListener {
 
 	public void end(long time) {
 		th.interrupt();
-		dc.start();
+		dt.start();
 		int choice = JOptionPane.showOptionDialog(this,
 				"Minröjaren Clara slutförde ditt jobb på " + time + " ms.",
 				"Clara", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
 				null, options, 0);
-		dc.interrupt();
-		dc = new DiscoThread(matrix, width, height);
+		dt.interrupt();
+		dt = new DiscoThread(matrix, width, height);
 		if (choice == 0) newGame();
 		else dispose();
 	}
@@ -168,13 +167,13 @@ public class MineField extends JFrame implements KeyListener {
 					JOptionPane.PLAIN_MESSAGE, null, options, 0);
 			break;
 		case MineField.WIN:
-			dc.start();
+			dt.start();
 			choice = JOptionPane.showOptionDialog(this, "Du röjde rubbet på "
-					+ getTime() + " sekunder!", "Vinst",
+					+ getTime() + " sekunder!", "Disko",
 					JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
 					null, options, 0);
-			dc.interrupt();
-			dc = new DiscoThread(matrix, width, height);
+			dt.interrupt();
+			dt = new DiscoThread(matrix, width, height);
 			break;
 		}
 		if (choice == 0) newGame();
@@ -301,9 +300,7 @@ public class MineField extends JFrame implements KeyListener {
 		try {
 			consolas = Font.createFont(Font.TRUETYPE_FONT, new File(
 					"files/consolab.ttf"));
-		} catch (FontFormatException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 

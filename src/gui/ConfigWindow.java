@@ -12,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 
 public class ConfigWindow extends JFrame {
 
@@ -26,6 +27,7 @@ public class ConfigWindow extends JFrame {
 
 		JPanel container = new JPanel();
 		container.setLayout(new GridLayout(3, 2));
+		container.setBorder(new EmptyBorder(10, 10, 10, 10));
 
 		container.add(new JLabel("New width:"));
 		widthInput = new JTextField();
@@ -35,7 +37,7 @@ public class ConfigWindow extends JFrame {
 		heightInput = new JTextField();
 		heightInput.setText(mf.getGridHeight() + "");
 		container.add(heightInput);
-		container.add(new JLabel("Number of mines:"));
+		container.add(new JLabel("Number of mines:     "));
 		minesInput = new JTextField();
 		minesInput.setText(mf.getNbrOfMines() + "");
 		container.add(minesInput);
