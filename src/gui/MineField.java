@@ -24,7 +24,7 @@ public class MineField extends JFrame implements KeyListener {
 
 	private static final long serialVersionUID = 1L;
 	private int height = 16, width = 30, nbrOfMines = 99;
-	private String[] options = { "Börja om", "Avsluta" };
+	private String[] options = { "B\u00F6rja om", "Avsluta" };
 	private long startTime;
 	private MineButton[][] matrix;
 	private ConfigButton cb;
@@ -37,7 +37,7 @@ public class MineField extends JFrame implements KeyListener {
 	private JPanel footer;
 
 	public MineField() {
-		setTitle("F1 Röj");
+		setTitle("F1 R\u00F6j");
 		container = new JPanel();
 		footer = new JPanel();
 		matrix = new MineButton[width][height];
@@ -147,7 +147,7 @@ public class MineField extends JFrame implements KeyListener {
 		th.interrupt();
 		dt.start();
 		int choice = JOptionPane.showOptionDialog(this,
-				"Minröjaren Clara slutförde ditt jobb på " + time + " ms.",
+				"Minr\u00F6jaren Clara slutf\u00F6rde ditt jobb p\u00e5 " + time + " ms.",
 				"Clara", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
 				null, options, 0);
 		dt.interrupt();
@@ -163,12 +163,12 @@ public class MineField extends JFrame implements KeyListener {
 		case MineField.LOSS:
 			checkMines();
 			choice = JOptionPane.showOptionDialog(this, getTime()
-					+ " sekunder.", "Förlust", JOptionPane.DEFAULT_OPTION,
+					+ " sekunder.", "F\u00F6rlust", JOptionPane.DEFAULT_OPTION,
 					JOptionPane.PLAIN_MESSAGE, null, options, 0);
 			break;
 		case MineField.WIN:
 			dt.start();
-			choice = JOptionPane.showOptionDialog(this, "Du röjde rubbet på "
+			choice = JOptionPane.showOptionDialog(this, "Du r\u00F6jde rubbet p\u00e5 "
 					+ getTime() + " sekunder!", "Disko",
 					JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
 					null, options, 0);
@@ -186,7 +186,7 @@ public class MineField extends JFrame implements KeyListener {
 				if (mines[j][i] == -1) {
 					if (!matrix[j][i].isFlagged()) {
 						matrix[j][i].setForeground(new Color(160, 160, 160));
-						matrix[j][i].setText("¤");
+						matrix[j][i].setText("\u00a4");
 					}
 				} else if (matrix[j][i].isFlagged()) {
 					matrix[j][i].setForeground(Color.RED);
@@ -300,10 +300,10 @@ public class MineField extends JFrame implements KeyListener {
 		try {
 			consolas = Font.createFont(Font.TRUETYPE_FONT, new File(
 					"files/consolab.ttf"));
-		} catch (Exception e) {
+			} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		
 		// try {
 		// UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		// } catch (UnsupportedLookAndFeelException e) {
