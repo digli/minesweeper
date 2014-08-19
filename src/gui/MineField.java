@@ -147,13 +147,15 @@ public class MineField extends JFrame implements KeyListener {
 		th.interrupt();
 		dt.start();
 		int choice = JOptionPane.showOptionDialog(this,
-				"Minr\u00F6jaren Clara slutf\u00F6rde ditt jobb p\u00e5 " + time + " ms.",
-				"Clara", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
-				null, options, 0);
+				"Minr\u00F6jaren Clara slutf\u00F6rde ditt jobb p\u00e5 "
+						+ time + " ms.", "Clara", JOptionPane.DEFAULT_OPTION,
+				JOptionPane.PLAIN_MESSAGE, null, options, 0);
 		dt.interrupt();
 		dt = new DiscoThread(matrix, width, height);
-		if (choice == 0) newGame();
-		else dispose();
+		if (choice == 0)
+			newGame();
+		else
+			dispose();
 	}
 
 	public void end(int ending) {
@@ -168,16 +170,18 @@ public class MineField extends JFrame implements KeyListener {
 			break;
 		case MineField.WIN:
 			dt.start();
-			choice = JOptionPane.showOptionDialog(this, "Du r\u00F6jde rubbet p\u00e5 "
-					+ getTime() + " sekunder!", "Disko",
-					JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
-					null, options, 0);
+			choice = JOptionPane.showOptionDialog(this,
+					"Du r\u00F6jde rubbet p\u00e5 " + getTime() + " sekunder!",
+					"Disko", JOptionPane.DEFAULT_OPTION,
+					JOptionPane.PLAIN_MESSAGE, null, options, 0);
 			dt.interrupt();
 			dt = new DiscoThread(matrix, width, height);
 			break;
 		}
-		if (choice == 0) newGame();
-		else dispose();
+		if (choice == 0)
+			newGame();
+		else
+			dispose();
 	}
 
 	private void checkMines() {
@@ -200,7 +204,8 @@ public class MineField extends JFrame implements KeyListener {
 		for (int i = -1; i < 2; i++) {
 			for (int j = -1; j < 2; j++) {
 				try {
-					if (matrix[x + j][y + i].click(false)) change = true;
+					if (matrix[x + j][y + i].click(false))
+						change = true;
 				} catch (ArrayIndexOutOfBoundsException e) {
 				}
 			}
@@ -214,7 +219,8 @@ public class MineField extends JFrame implements KeyListener {
 		for (int i = -1; i < 2; i++) {
 			for (int j = -1; j < 2; j++) {
 				try {
-					if (matrix[x + j][y + i].isFlagged()) flags++;
+					if (matrix[x + j][y + i].isFlagged())
+						flags++;
 					else {
 						if (mines[x + j][y + i] == -1) {
 							lost = true;
@@ -230,13 +236,15 @@ public class MineField extends JFrame implements KeyListener {
 			if (lost) {
 				matrix[tempX][tempY].click(false);
 				return true;
-			} else return clickAdjacent(x, y);
+			} else
+				return clickAdjacent(x, y);
 		}
 		return false;
 	}
 
 	public void generate(int x, int y) {
-		if (isStarted) return;
+		if (isStarted)
+			return;
 
 		th.start();
 		mines = new int[width][height];
@@ -300,10 +308,13 @@ public class MineField extends JFrame implements KeyListener {
 		try {
 			consolas = Font.createFont(Font.TRUETYPE_FONT, new File(
 					"files/consolab.ttf"));
-			} catch (Exception e) {
+
+			// consolas = Font.createFont(Font.TRUETYPE_FONT,
+			// MineField.class.getResourceAsStream("/files/consolab.ttf"));
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		// try {
 		// UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		// } catch (UnsupportedLookAndFeelException e) {
@@ -311,7 +322,6 @@ public class MineField extends JFrame implements KeyListener {
 		// } catch (InstantiationException e) {
 		// } catch (IllegalAccessException e) {
 		// }
-
 		new MineField();
 	}
 }
