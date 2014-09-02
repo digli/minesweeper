@@ -19,8 +19,6 @@ public class MineButton extends JButton implements MouseListener {
 	private int x, y;
 	private MineField mf;
 
-	// private JLabel label;
-
 	public MineButton(MineField mf, int x, int y) {
 		this.mf = mf;
 		this.x = x;
@@ -29,19 +27,13 @@ public class MineButton extends JButton implements MouseListener {
 		leftBuffer = false;
 		rightClick = false;
 		bufferTime = false;
-		setFont(MineField.consolas.deriveFont(34f));
+		setFont(MineField.consolas.deriveFont(20f));
 		lastClicked = 0;
 		addMouseListener(this);
 		setPreferredSize(new Dimension(35, 35));
 		setFocusable(false);
 		setMargin(new Insets(5, 0, 0, 0));
 
-		// label = new JLabel();
-		// label.setFont(new Font("Consolas", Font.BOLD, 34));
-		// label.setAlignmentX(CENTER_ALIGNMENT);
-		// label.setAlignmentY(CENTER_ALIGNMENT);
-		// label.setAutoscrolls(true);
-		// add(label, BorderLayout.CENTER);
 	}
 
 	// Solver only
@@ -52,11 +44,6 @@ public class MineButton extends JButton implements MouseListener {
 	public int y() {
 		return y;
 	}
-
-	// @Override
-	// public void setText(String s) {
-	// label.setText(s);
-	// }
 
 	public void reset() {
 		setEnabled(true);
@@ -72,7 +59,8 @@ public class MineButton extends JButton implements MouseListener {
 
 	// Solver only
 	public void setFlagged() {
-		if (isFlagged) return;
+		if (isFlagged)
+			return;
 		setText("!");
 		isFlagged = true;
 		mf.updateMineCount(-1);
@@ -84,8 +72,8 @@ public class MineButton extends JButton implements MouseListener {
 
 	// Returns true if button was clicked
 	public boolean click(boolean manual) {
-		// slowest method in history
-		if (getBackground() != null) setBackground(null);
+		if (getBackground() != null)
+			setBackground(null);
 		boolean change = false;
 		if (isEnabled() && !isFlagged && !bufferTime) {
 			change = true;
@@ -93,7 +81,7 @@ public class MineButton extends JButton implements MouseListener {
 			setEnabled(false);
 			switch (mf.mines[x][y]) {
 			case -1:
-				setText("¤");
+				setText("ï¿½");
 				setBackground(Color.RED);
 				mf.end(MineField.LOSS);
 				break;
@@ -111,15 +99,18 @@ public class MineButton extends JButton implements MouseListener {
 				mf.checkAdjacent(x, y);
 			lastClicked = System.currentTimeMillis();
 		}
-		if (mf.progress == 0 && manual) mf.end(MineField.WIN);
+		if (mf.progress == 0 && manual)
+			mf.end(MineField.WIN);
 		return change;
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		if (!isEnabled()) click(true);
+		if (!isEnabled())
+			click(true);
 		else {
-			if (e.getButton() == MouseEvent.BUTTON1) leftClick = true;
+			if (e.getButton() == MouseEvent.BUTTON1)
+				leftClick = true;
 			if (e.getButton() == MouseEvent.BUTTON3) {
 				if (!leftClick) {
 					if (isFlagged) {
@@ -133,7 +124,8 @@ public class MineButton extends JButton implements MouseListener {
 				}
 				rightClick = true;
 			}
-			if (leftClick && rightClick) bufferTime = true;
+			if (leftClick && rightClick)
+				bufferTime = true;
 		}
 	}
 
@@ -149,13 +141,15 @@ public class MineButton extends JButton implements MouseListener {
 		}
 		if (e.getButton() == MouseEvent.BUTTON3 && rightClick) {
 			rightClick = false;
-			if (!leftClick) bufferTime = false;
+			if (!leftClick)
+				bufferTime = false;
 		}
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		if (leftBuffer) leftClick = true;
+		if (leftBuffer)
+			leftClick = true;
 	}
 
 	@Override
@@ -168,5 +162,13 @@ public class MineButton extends JButton implements MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+	}
+
+	public boolean isAdjacentTo(MineButton b) {
+		if ((x == b.x - 1 || x == b.x || x == b.x + 1)
+				&& (y == b.y - 1 || y == b.y || y == b.y + 1))
+			return true;
+		else
+			return false;
 	}
 }
