@@ -27,7 +27,7 @@ public class MineButton extends JButton implements MouseListener {
 		leftBuffer = false;
 		rightClick = false;
 		bufferTime = false;
-		setFont(MineField.consolas.deriveFont(20f));
+		setFont(MineField.consolas.deriveFont(34f));
 		lastClicked = 0;
 		addMouseListener(this);
 		setPreferredSize(new Dimension(35, 35));

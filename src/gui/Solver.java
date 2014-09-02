@@ -1,6 +1,5 @@
 package gui;
 
-import java.awt.Color;
 import java.util.ArrayList;
 
 public class Solver {
@@ -35,12 +34,10 @@ public class Solver {
 				for (int x = 0; x < matrix.length; x++) {
 					if (!matrix[x][y].isEnabled()) {
 						if (countAdjacent(x, y) == mf.mines[x][y]) {
-							if (flagAdjacent(x, y))
-								hasChanged = true;
+							if (flagAdjacent(x, y)) hasChanged = true;
 						}
 						if (flags[x][y] == mf.mines[x][y]) {
-							if (mf.checkAdjacent(x, y))
-								hasChanged = true;
+							if (mf.checkAdjacent(x, y)) hasChanged = true;
 						}
 					}
 				}
@@ -63,15 +60,10 @@ public class Solver {
 				}
 			}
 
-			int wasd = 0;
-			for (MineButton b : borderTiles) {
-				b.setBackground(Color.PINK);
-				// b.setText("" + wasd++);
-			}
-
-			for (MineButton b : clickedTiles) {
-				b.setBackground(Color.YELLOW);
-			}
+			// for (int i = 0; i < borderTiles.size(); i++) {
+			// borderTiles.get(i).setText(i + "");
+			// borderTiles.get(i).setBackground(Color.PINK);
+			// }
 
 			int[][] a = new int[clickedTiles.size()][borderTiles.size()];
 			int[] b = new int[clickedTiles.size()];
@@ -79,7 +71,8 @@ public class Solver {
 			for (int i = 0; i < clickedTiles.size(); i++) {
 				MineButton temp = clickedTiles.get(i);
 				// Creates column matrix with corresponding mine value
-				b[i] = mf.mines[temp.x()][temp.y()];
+				b[i] = mf.mines[temp.x()][temp.y()]
+						- countAdjacentFlags(temp.x(), temp.y());
 				for (int j = 0; j < borderTiles.size(); j++) {
 					if (clickedTiles.get(i).isAdjacentTo(borderTiles.get(j))) {
 						a[i][j] = 1;
@@ -87,13 +80,6 @@ public class Solver {
 				}
 			}
 
-			for (int i = 0; i < a.length; i++) {
-				for (int j = 0; j < a[0].length; j++) {
-					System.out.print(a[i][j] + " ");
-				}
-				System.out.println("\t" + b[i]);
-			}
-			System.out.println();
 			gauss(a, b);
 
 			for (int i = 0; i < a.length; i++) {
@@ -102,30 +88,64 @@ public class Solver {
 				}
 				System.out.println("\t" + b[i]);
 			}
+			System.out.println("\na.length = " + a.length + "\ta[0].length = "
+					+ a[0].length + "\n");
+
+			for (int i = a.length - 1; i > 0; i--) {
+				int upper = 0, lower = 0;
+				for (int j = 0; j < a[0].length; j++) {
+					if (a[i][j] == -1) lower++;
+					else if (a[i][j] == 1) upper++;
+				}
+
+				if (upper == b[i]) {
+					for (int j = 0; j < a[0].length; j++) {
+						MineButton temp = borderTiles.get(j);
+						if (a[i][j] == 1) flag(temp.x(), temp.y());
+						else if (a[i][j] == -1) {
+							borderTiles.get(j).click(true);
+							// Set the field to non-mine for all rows
+							for (int k = 0; k < a.length; k++) {
+								a[i][k] = 0;
+							}
+						}
+					}
+				} else if (lower == b[i]) {
+					for (int j = 0; j < a[0].length; j++) {
+						MineButton temp = borderTiles.get(j);
+						if (a[i][j] == -1) flag(temp.x(), temp.y());
+						else if (a[i][j] == 1) {
+							borderTiles.get(j).click(true);
+							// Set the field to non-mine for all rows
+							for (int k = 0; k < a.length; k++) {
+								a[i][k] = 0;
+							}
+						}
+					}
+				}
+			}
+
 		}
 
-		if (mf.progress == 0)
-			mf.end(System.currentTimeMillis() - start);
+		if (mf.progress == 0) mf.end(System.currentTimeMillis() - start);
 	}
 
 	private void gauss(int[][] a, int[] b) {
 		int y = a.length;
 		int x = a[0].length;
-
 		int column = -1;
 
-		for (int i = 0; i < y && column < x; i++) {
+		loop: for (int i = 0; i < y; i++) {
 			// Find pivot row
 			int max = i;
-
 			do {
-				column++;
-				for (int j = i + 1; j < y && column < x; j++) {
+				if (++column == x) break loop;
+				for (int j = i + 1; j < y; j++) {
 					if (Math.abs(a[j][column]) > Math.abs(a[max][column])) {
 						max = j;
 					}
 				}
-			} while (column < x - 1 && a[max][column] == 0);
+			} while (column < x && a[max][column] == 0);
 
 			// Swap rows
 			int[] temp = a[i];
@@ -136,6 +156,7 @@ public class Solver {
 			b[i] = b[max];
 			b[max] = t;
 
+			// Subtraction by rows
 			for (int j = i + 1; j < y; j++) {
 				if (a[j][column] != 0) {
 					int alpha = a[j][column] / a[i][column];
@@ -146,6 +167,21 @@ public class Solver {
 				}
 			}
 		}
+	}
+
+	private int countAdjacentFlags(int x, int y) {
+		int sum = 0;
+		for (int i = -1; i < 2; i++) {
+			for (int j = -1; j < 2; j++) {
+				try {
+					if (matrix[x + j][y + i].isFlagged()) {
+						sum++;
+					}
+				} catch (ArrayIndexOutOfBoundsException e) {
+				}
+			}
+		}
+		return sum;
 	}
 
 	private void addAdjacent(int x, int y, ArrayList<MineButton> list) {
@@ -172,8 +208,7 @@ public class Solver {
 		for (int i = -1; i < 2; i++) {
 			for (int j = -1; j < 2; j++) {
 				try {
-					if (matrix[x + j][y + i].isEnabled())
-						sum++;
+					if (matrix[x + j][y + i].isEnabled()) sum++;
 				} catch (ArrayIndexOutOfBoundsException e) {
 				}
 			}
