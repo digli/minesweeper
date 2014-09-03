@@ -97,8 +97,11 @@ public class Solver {
 					if (a[i][j] == -1) lower++;
 					else if (a[i][j] == 1) upper++;
 				}
-
-				if (upper == b[i]) {
+				
+				if (upper + lower < Math.abs(b[i])) {
+					throw new RuntimeException("what the dick man");
+				}
+				else if (upper == b[i]) {
 					for (int j = 0; j < a[0].length; j++) {
 						MineButton temp = borderTiles.get(j);
 						if (a[i][j] == 1) flag(temp.x(), temp.y());
@@ -110,7 +113,7 @@ public class Solver {
 							}
 						}
 					}
-				} else if (lower == b[i]) {
+				} else if (-lower == b[i]) {
 					for (int j = 0; j < a[0].length; j++) {
 						MineButton temp = borderTiles.get(j);
 						if (a[i][j] == -1) flag(temp.x(), temp.y());
@@ -141,11 +144,11 @@ public class Solver {
 			do {
 				if (++column == x) break loop;
 				for (int j = i + 1; j < y; j++) {
-					if (Math.abs(a[j][column]) > Math.abs(a[max][column])) {
+					if (a[j][column] != 0) {
 						max = j;
 					}
 				}
-			} while (column < x && a[max][column] == 0);
+			} while (a[max][column] == 0);
 
 			// Swap rows
 			int[] temp = a[i];
