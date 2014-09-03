@@ -48,11 +48,11 @@ public class MineField extends JFrame implements KeyListener {
 		solver = new Solver(this, matrix);
 
 		footer.add(tc);
-		footer.add(new SpaceFiller(100));
+		footer.add(new SpaceFiller(20));
 		footer.add(cb);
-		footer.add(new SpaceFiller(100));
+		footer.add(new SpaceFiller(20));
 		footer.add(new SolveButton(solver));
-		footer.add(new SpaceFiller(100));
+		footer.add(new SpaceFiller(20));
 		footer.add(mc);
 
 		addKeyListener(this);
@@ -86,11 +86,10 @@ public class MineField extends JFrame implements KeyListener {
 		progress = height * width - nbrOfMines;
 		th = new TimeHandler(tc);
 		tc.reset();
-		mc.reset();
+		mc.reset(nbrOfMines);
 		isStarted = false;
 
-		// Solver only
-		solver.reset();
+		solver.reset(matrix);
 
 		for (int i = 0; i < height; i++)
 			for (int j = 0; j < width; j++)
@@ -98,7 +97,6 @@ public class MineField extends JFrame implements KeyListener {
 	}
 
 	public void setConfig(int width, int height, int mines) {
-		// TODO: fix arrayoutofbounds when altering width/height
 		// TODO: fix resizing of spacefillers when lowering width
 		this.width = width;
 		this.height = height;
@@ -107,6 +105,7 @@ public class MineField extends JFrame implements KeyListener {
 		remove(container);
 
 		container = new JPanel();
+		matrix = new MineButton[width][height];
 		init();
 		newGame();
 
@@ -152,10 +151,8 @@ public class MineField extends JFrame implements KeyListener {
 				JOptionPane.PLAIN_MESSAGE, null, options, 0);
 		dt.interrupt();
 		dt = new DiscoThread(matrix, width, height);
-		if (choice == 0)
-			newGame();
-		else
-			dispose();
+		if (choice == 0) newGame();
+		else dispose();
 	}
 
 	public void end(int ending) {
@@ -178,10 +175,8 @@ public class MineField extends JFrame implements KeyListener {
 			dt = new DiscoThread(matrix, width, height);
 			break;
 		}
-		if (choice == 0)
-			newGame();
-		else
-			dispose();
+		if (choice == 0) newGame();
+		else dispose();
 	}
 
 	private void checkMines() {
@@ -204,8 +199,7 @@ public class MineField extends JFrame implements KeyListener {
 		for (int i = -1; i < 2; i++) {
 			for (int j = -1; j < 2; j++) {
 				try {
-					if (matrix[x + j][y + i].click(false))
-						change = true;
+					if (matrix[x + j][y + i].click(false)) change = true;
 				} catch (ArrayIndexOutOfBoundsException e) {
 				}
 			}
@@ -219,8 +213,7 @@ public class MineField extends JFrame implements KeyListener {
 		for (int i = -1; i < 2; i++) {
 			for (int j = -1; j < 2; j++) {
 				try {
-					if (matrix[x + j][y + i].isFlagged())
-						flags++;
+					if (matrix[x + j][y + i].isFlagged()) flags++;
 					else {
 						if (mines[x + j][y + i] == -1) {
 							lost = true;
@@ -236,15 +229,13 @@ public class MineField extends JFrame implements KeyListener {
 			if (lost) {
 				matrix[tempX][tempY].click(false);
 				return true;
-			} else
-				return clickAdjacent(x, y);
+			} else return clickAdjacent(x, y);
 		}
 		return false;
 	}
 
 	public void generate(int x, int y) {
-		if (isStarted)
-			return;
+		if (isStarted) return;
 
 		th.start();
 		mines = new int[width][height];

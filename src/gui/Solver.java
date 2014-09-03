@@ -14,7 +14,8 @@ public class Solver {
 		this.matrix = matrix;
 	}
 
-	public void reset() {
+	public void reset(MineButton[][] matrix) {
+		this.matrix = matrix;
 		flags = new int[matrix.length][matrix[0].length];
 	}
 
@@ -65,63 +66,69 @@ public class Solver {
 			// borderTiles.get(i).setBackground(Color.PINK);
 			// }
 
-			int[][] a = new int[clickedTiles.size()][borderTiles.size()];
-			int[] b = new int[clickedTiles.size()];
+			if (!clickedTiles.isEmpty() && !borderTiles.isEmpty()) {
 
-			for (int i = 0; i < clickedTiles.size(); i++) {
-				MineButton temp = clickedTiles.get(i);
-				// Creates column matrix with corresponding mine value
-				b[i] = mf.mines[temp.x()][temp.y()]
-						- countAdjacentFlags(temp.x(), temp.y());
-				for (int j = 0; j < borderTiles.size(); j++) {
-					if (clickedTiles.get(i).isAdjacentTo(borderTiles.get(j))) {
-						a[i][j] = 1;
-					}
-				}
-			}
+				int[][] a = new int[clickedTiles.size()][borderTiles.size()];
+				int[] b = new int[clickedTiles.size()];
 
-			gauss(a, b);
-
-			for (int i = 0; i < a.length; i++) {
-				for (int j = 0; j < a[0].length; j++) {
-					System.out.print(a[i][j] + " ");
-				}
-				System.out.println("\t" + b[i]);
-			}
-			System.out.println("\na.length = " + a.length + "\ta[0].length = "
-					+ a[0].length + "\n");
-
-			for (int i = a.length - 1; i > 0; i--) {
-				int upper = 0, lower = 0;
-				for (int j = 0; j < a[0].length; j++) {
-					if (a[i][j] == -1) lower++;
-					else if (a[i][j] == 1) upper++;
-				}
-				
-				if (upper + lower < Math.abs(b[i])) {
-					throw new RuntimeException("what the dick man");
-				}
-				else if (upper == b[i]) {
-					for (int j = 0; j < a[0].length; j++) {
-						MineButton temp = borderTiles.get(j);
-						if (a[i][j] == 1) flag(temp.x(), temp.y());
-						else if (a[i][j] == -1) {
-							borderTiles.get(j).click(true);
-							// Set the field to non-mine for all rows
-							for (int k = 0; k < a.length; k++) {
-								a[i][k] = 0;
-							}
+				for (int i = 0; i < clickedTiles.size(); i++) {
+					MineButton temp = clickedTiles.get(i);
+					// Creates column matrix with corresponding mine value
+					b[i] = mf.mines[temp.x()][temp.y()]
+							- countAdjacentFlags(temp.x(), temp.y());
+					for (int j = 0; j < borderTiles.size(); j++) {
+						if (clickedTiles.get(i)
+								.isAdjacentTo(borderTiles.get(j))) {
+							a[i][j] = 1;
 						}
 					}
-				} else if (-lower == b[i]) {
+				}
+
+				gauss(a, b);
+
+				// Prints the gaussed matrix
+				for (int i = 0; i < a.length; i++) {
 					for (int j = 0; j < a[0].length; j++) {
-						MineButton temp = borderTiles.get(j);
-						if (a[i][j] == -1) flag(temp.x(), temp.y());
-						else if (a[i][j] == 1) {
-							borderTiles.get(j).click(true);
-							// Set the field to non-mine for all rows
-							for (int k = 0; k < a.length; k++) {
-								a[i][k] = 0;
+						System.out.print(a[i][j] + " ");
+					}
+					System.out.println("\t" + b[i]);
+				}
+				
+				
+				System.out.println("\na.length = " + a.length
+						+ "\ta[0].length = " + a[0].length + "\n");
+
+				for (int i = a.length - 1; i > 0; i--) {
+					int upper = 0, lower = 0;
+					for (int j = 0; j < a[0].length; j++) {
+						if (a[i][j] == -1) lower++;
+						else if (a[i][j] == 1) upper++;
+					}
+
+					if (upper + lower < Math.abs(b[i])) {
+						throw new RuntimeException("what the dick man");
+					} else if (upper == b[i]) {
+						for (int j = 0; j < a[0].length; j++) {
+							MineButton temp = borderTiles.get(j);
+							if (a[i][j] == 1) flag(temp.x(), temp.y());
+							else if (a[i][j] == -1) {
+								borderTiles.get(j).click(true);
+								// Set the field to non-mine for all rows
+								for (int k = 0; k < a.length; k++) {
+									a[i][k] = 0;
+								}
+							}
+						}
+					} else if (-lower == b[i]) {
+						for (int j = 0; j < a[0].length; j++) {
+							MineButton temp = borderTiles.get(j);
+							if (a[i][j] == -1) flag(temp.x(), temp.y());
+							else if (a[i][j] == 1) {
+								borderTiles.get(j).click(true);
+								// Set the field to non-mine for all rows
+								for (int k = 0; k < a.length; k++) {
+									a[i][k] = 0;
+								}
 							}
 						}
 					}
