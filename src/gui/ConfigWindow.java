@@ -16,7 +16,6 @@ import javax.swing.border.EmptyBorder;
 
 public class ConfigWindow extends JFrame {
 
-	// work in progress
 	// TODO: only allow typing of numbers in text fields
 	private static final long serialVersionUID = 1L;
 	private MineField mf;
@@ -43,7 +42,6 @@ public class ConfigWindow extends JFrame {
 		container.add(minesInput);
 
 		add(container);
-		add(new JLabel("ConfigWindow is WIP"), BorderLayout.NORTH);
 		add(new OkButton(this), BorderLayout.SOUTH);
 
 		pack();
@@ -83,6 +81,10 @@ public class ConfigWindow extends JFrame {
 				mines = Integer.parseInt(minesInput.getText());
 			} catch (NumberFormatException e) {
 				System.out.println("NumberFormatException");
+			}
+
+			if (mines > width * height - 20) {
+				mines = width * height - 20;
 			}
 
 			mf.setConfig(width, height, mines);

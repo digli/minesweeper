@@ -114,7 +114,7 @@ public class Solver {
 							else if (a[i][j] == -1) {
 								borderTiles.get(j).click(true);
 								// Set the field to non-mine for all rows
-								for (int k = 0; k < a.length; k++) {
+								for (int k = 0; k < a[0].length; k++) {
 									a[i][k] = 0;
 								}
 							}
@@ -126,7 +126,7 @@ public class Solver {
 							else if (a[i][j] == 1) {
 								borderTiles.get(j).click(true);
 								// Set the field to non-mine for all rows
-								for (int k = 0; k < a.length; k++) {
+								for (int k = 0; k < a[0].length; k++) {
 									a[i][k] = 0;
 								}
 							}

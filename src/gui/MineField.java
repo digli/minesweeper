@@ -102,6 +102,8 @@ public class MineField extends JFrame implements KeyListener {
 		this.height = height;
 		nbrOfMines = mines;
 
+		th.interrupt();
+
 		remove(container);
 
 		container = new JPanel();
@@ -299,9 +301,6 @@ public class MineField extends JFrame implements KeyListener {
 		try {
 			consolas = Font.createFont(Font.TRUETYPE_FONT, new File(
 					"files/consolab.ttf"));
-
-			// consolas = Font.createFont(Font.TRUETYPE_FONT,
-			// MineField.class.getResourceAsStream("/files/consolab.ttf"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
